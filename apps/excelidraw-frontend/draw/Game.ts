@@ -101,7 +101,7 @@ export class Game {
             this.clearCanvas();
         }
 
-        alert("undo");
+        console.log("undo")
     }
 
     redo() {
@@ -111,7 +111,7 @@ export class Game {
             this.clearCanvas();
         }
 
-        alert("redo");
+        console.log("redo")
     }
 
     destroy() {

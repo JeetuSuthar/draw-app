@@ -47,21 +47,22 @@ export default function Hero() {
                 </div>
             </div>
             <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-white dark:bg-gray-900">
+               
+
                 <Image
                     className="h-56 w-full block dark:hidden object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
                     src="https://res.cloudinary.com/dwnapxhev/image/upload/v1737348443/Excalidraw_Live_Presentation_bihmed.png"
                     alt="Excalidraw Whiteboard"
-                    layout="responsive"
-                    width={800}
-                    height={600}
+                    width={800}  // Explicitly set width
+                    height={600} // Explicitly set height
                 />
-                <Image 
+
+                <Image
                     className="h-56 w-full hidden dark:block object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
                     src="https://i.ibb.co/ssw377M/darkmodehero.png"
                     alt="Excalidraw Whiteboard"
-                    layout="responsive"
-                    width={800}
-                    height={600}
+                    width={800}  // Set fixed width
+                    height={600} // Set fixed height
                 />
             </div>
         </div>
