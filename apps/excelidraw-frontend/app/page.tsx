@@ -2,7 +2,7 @@ import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Features from '@/components/Features'
 import HowItWorks from '@/components/HowItWorks'
-import Pricing from '@/components/Pricing'
+
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -13,7 +13,14 @@ export default function Home() {
         <Hero />
         <Features />
         <HowItWorks />
-        <Pricing />
+        <div className='pt-5 pb-10 mb-10'>
+        <div className="h-[50%] my-5 flex items-center w-[60%] mx-auto justify-center rounded-xl overflow-hidden scale-110 z-30">
+          <video width="100%" height="100%" autoPlay loop muted>
+            <source src="/Demo-vid.mp4" type="video/mp4" />
+          </video>
+        </div>
+        </div>
+        
       </main>
       <Footer />
     </div>
