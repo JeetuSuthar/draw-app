@@ -285,7 +285,84 @@ export class Game {
             this.ctx.closePath();
         }
     }
-
+    private eraseShapes() {
+        const eraseRadius = 10; // Define the radius of the eraser
+    
+        this.existingShapes = this.existingShapes.filter(shape => {
+            if (!shape) return true;
+    
+            switch (shape.type) {
+                case "rect":
+                    return !this.isPointInRect(this.pathErase[this.pathErase.length - 1], shape);
+                case "circle":
+                    return !this.isPointInCircle(this.pathErase[this.pathErase.length - 1], shape);
+                case "pencil":
+                    return !this.isPointInPencil(this.pathErase[this.pathErase.length - 1], shape, eraseRadius);
+                case "line":
+                    return !this.isPointInLine(this.pathErase[this.pathErase.length - 1], shape, eraseRadius);
+                case "rhombus":
+                    return !this.isPointInRhombus(this.pathErase[this.pathErase.length - 1], shape);
+                default:
+                    return true;
+            }
+        });
+    
+        this.clearCanvas();
+    }
+    private isPointInRect(point: [number, number], rect: { x: number; y: number; width: number; height: number }): boolean {
+        return point[0] >= rect.x && point[0] <= rect.x + rect.width &&
+               point[1] >= rect.y && point[1] <= rect.y + rect.height;
+    }
+    
+    private isPointInCircle(point: [number, number], circle: { centerX: number; centerY: number; radius: number }): boolean {
+        const dx = point[0] - circle.centerX;
+        const dy = point[1] - circle.centerY;
+        return Math.sqrt(dx * dx + dy * dy) <= circle.radius;
+    }
+    
+    private isPointInPencil(point: [number, number], pencil: { points: { x: number; y: number }[] }, radius: number): boolean {
+        return pencil.points.some(p => {
+            const dx = point[0] - p.x;
+            const dy = point[1] - p.y;
+            return Math.sqrt(dx * dx + dy * dy) <= radius;
+        });
+    }
+    
+    private isPointInLine(point: [number, number], line: { x1: number; y1: number; x2: number; y2: number }, radius: number): boolean {
+        const A = point[0] - line.x1;
+        const B = point[1] - line.y1;
+        const C = line.x2 - line.x1;
+        const D = line.y2 - line.y1;
+    
+        const dot = A * C + B * D;
+        const lenSq = C * C + D * D;
+        const param = dot / lenSq;
+    
+        let xx, yy;
+    
+        if (param < 0) {
+            xx = line.x1;
+            yy = line.y1;
+        } else if (param > 1) {
+            xx = line.x2;
+            yy = line.y2;
+        } else {
+            xx = line.x1 + param * C;
+            yy = line.y1 + param * D;
+        }
+    
+        const dx = point[0] - xx;
+        const dy = point[1] - yy;
+        return Math.sqrt(dx * dx + dy * dy) <= radius;
+    }
+    
+    private isPointInRhombus(point: [number, number], rhombus: { x: number; y: number; width: number; height: number }): boolean {
+        const centerX = rhombus.x + rhombus.width / 2;
+        const centerY = rhombus.y + rhombus.height / 2;
+        const dx = Math.abs(point[0] - centerX);
+        const dy = Math.abs(point[1] - centerY);
+        return (dx / (rhombus.width / 2)) + (dy / (rhombus.height / 2)) <= 1;
+    }
     drawText(shape: Shape) {
         if (shape?.type === "text") {
             this.ctx.font = "14px Arial"; // Customize font as needed
@@ -332,7 +409,7 @@ export class Game {
             this.panX,
             this.panY,
         );
-
+    
         this.ctx.clearRect(
             -this.panX / this.scale,
             -this.panY / this.scale,
@@ -507,12 +584,15 @@ export class Game {
                 message: JSON.stringify({ shape }),
                 roomId: this.roomId,
             }));
+        } else if (this.selectedTool === "erase") {
+            this.eraseShapes();
+            this.pathErase = [];
         }
-
+    
         if (!shape) {
             return;
         }
-
+    
         this.existingShapes.push(shape);
         this.pathErase = [];
         console.log(
@@ -535,27 +615,26 @@ export class Game {
         if (this.clicked && this.selectedTool === "hand" && this.isDragging) {
             const dx = e.clientX - this.lastMousePosition.x;
             const dy = e.clientY - this.lastMousePosition.y;
-
+    
             // Update canvas offset
             this.canvasOffset.x += dx;
             this.canvasOffset.y += dy;
-
+    
             // Apply translation to canvas
             this.ctx.translate(dx, dy);
-
+    
             // Redraw shapes with the new offset
             this.clearCanvas();
-
+    
             this.lastMousePosition = { x: e.clientX, y: e.clientY };
         }
         if (this.clicked) {
             const width = e.clientX - this.startX;
             const height = e.clientY - this.startY;
-
+    
             //console.log(`Mouse Move: X: ${currentX}, Y: ${currentY}`);
             this.clearCanvas();
             if (this.selectedTool === "rect") {
-                
                 this.drawRect({
                     type: "rect",
                     x: this.startX,
@@ -590,6 +669,7 @@ export class Game {
                 }
             } else if (this.selectedTool === "erase") {
                 this.pathErase.push([e.clientX, e.clientY]);
+                this.eraseShapes(); // Call the erase function
             }
             if (this.selectedTool === "line") {
                 this.clearCanvas();
@@ -615,11 +695,8 @@ export class Game {
 
     initMouseHandlers() {
         this.canvas.addEventListener("mousedown", this.mouseDownHandler);
-
         this.canvas.addEventListener("mouseup", this.mouseUpHandler);
-
         this.canvas.addEventListener("mousemove", this.mouseMoveHandler);
-
         this.canvas.addEventListener("wheel", this.zoomHandler);
     }
 }
