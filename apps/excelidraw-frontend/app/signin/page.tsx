@@ -30,7 +30,8 @@ export default function SignInPage() {
       }
       
       toast.success("Welcome back!")
-      router.push("/rooms")
+      router.replace("/rooms")
+
     } catch (error) {
       toast.error("Invalid credentials. Please try again.")
     } finally {
