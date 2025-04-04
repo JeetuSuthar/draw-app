@@ -1,11 +1,13 @@
-import { RoomCanvas } from "@/components/RoomCanvas";
+import RoomCanvas from "@/components/RoomCanvas";
 
-type PageProps = {
-    params: { roomId: string };
-};
+export type paramsType = Promise<{ roomId: string }>;
+ 
+ export default async function CanvasPage(props: { params: paramsType }){
+   const { roomId } = await props.params;
 
-export default function CanvasPage({ params }:any) {
-    const roomId = (params as any).roomId;  // Cast `params` to `any` here
-
-    return <RoomCanvas roomId={roomId} />;
-}
+   return (
+     <div>
+       <RoomCanvas roomId={roomId} />
+     </div>
+   );
+ }

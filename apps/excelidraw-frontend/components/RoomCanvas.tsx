@@ -1,47 +1,39 @@
 "use client";
-
+import { useEffect,  useState } from "react"
 import { WS_URL } from "@/config";
-import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
+import dynamic from "next/dynamic";
 
-export function RoomCanvas({ roomId }: { roomId: string }) {
-    const [socket, setSocket] = useState<WebSocket | null>(null);
+const GridLoader = dynamic(() => import("react-spinners").then((mod) => mod.GridLoader), {
+  ssr: false,
+});
 
-    useEffect(() => {
-        const token = localStorage.getItem("token"); // Get token from localStorage
-        if (!token) {
-            console.error("No token found in localStorage");
-            return;
-        }
+interface params{
+    roomId : string 
+}
 
-        const ws = new WebSocket(`${WS_URL}?token=${token}`);
-
-        ws.onopen = () => {
+export default function RoomCanvas(props : params){
+    const [socket,setSocket]=useState<WebSocket | null>(null);
+    useEffect(()=>{
+        const token=localStorage.getItem('token');
+        const ws=new WebSocket(`${WS_URL}?token=${token}`);
+        ws.onopen=()=>{
             setSocket(ws);
-            const data = JSON.stringify({
-                type: "join_room",
-                roomId,
-            });
-            console.log(data);
-            ws.send(data);
-        };
+            ws.send(JSON.stringify({
+                type : "join_room",
+                roomId : props.roomId
+            }))
+        }
+    },[]);
 
-        ws.onclose = () => {
-            console.log("WebSocket disconnected");
-        };
-
-        return () => {
-            ws.close(); // Clean up WebSocket connection on unmount
-        };
-    }, [roomId]); // Re-run effect when roomId changes
-
-    if (!socket) {
-        return <div>Connecting to server....</div>;
+    if(!socket){
+        return <div className="flex justify-center items-center h-screen">
+            <GridLoader  color="#ffffff" size={30} />
+        </div>
     }
 
-    return (
-        <div>
-            <Canvas roomId={roomId} socket={socket} />
-        </div>
-    );
+    return <div>
+        
+        <Canvas roomId={props.roomId} socket={socket} />
+    </div>
 }
