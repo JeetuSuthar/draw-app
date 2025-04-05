@@ -628,14 +628,18 @@ export class Game{
         else this.text+=e.key;
     }
 
-    send(shape : Shape){
-        this.socket.send(JSON.stringify({
-            type:'chat',
-            roomId:Number(this.roomId),
-            shape:shape
-        }));
+    send(shape: Shape) {
+        if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify({
+                type: 'chat',
+                roomId: Number(this.roomId),
+                shape: shape
+            }));
+        } else {
+            console.warn("WebSocket not open. Cannot send shape.");
+        }
     }
-
+    
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = "rgb(0,0,0)";
