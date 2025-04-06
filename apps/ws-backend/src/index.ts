@@ -1,6 +1,9 @@
+
+import { prismaClient } from "@repo/db/client"; 
+
 import {WebSocket,WebSocketServer} from "ws";
 import jwt,{ JwtPayload } from "jsonwebtoken";
-import { prismaClient } from "@repo/db/client"; 
+
 
 const JWT_SECRET=process.env.JWT_SECRET as string;
 
@@ -30,7 +33,7 @@ function authenticateUser(token : string) : string | null{
         return null;
     }
 }
-
+console.log("Maling connetion")
 wss.on('connection',function connection(ws,request){
     const url=request.url;
     if(!url) return;

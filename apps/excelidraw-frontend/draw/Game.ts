@@ -629,16 +629,25 @@ export class Game{
     }
 
     send(shape: Shape) {
-        if (this.socket.readyState === WebSocket.OPEN) {
-            this.socket.send(JSON.stringify({
-                type: 'chat',
-                roomId: Number(this.roomId),
-                shape: shape
-            }));
-        } else {
-            console.warn("WebSocket not open. Cannot send shape.");
+        console.log("Shape is ", shape);
+    
+        try {
+            if (this.socket.readyState === WebSocket.OPEN) {
+                console.log("Shape is (inside IF)", shape);
+                this.socket.send(JSON.stringify({
+                    type: 'chat',
+                    roomId: Number(this.roomId),
+                    shape: shape
+                }));
+            } else {
+                console.warn("⚠️ WebSocket not open. Cannot send shape.");
+                console.log("Current readyState:", this.socket.readyState); // 0, 1, 2, or 3
+            }
+        } catch (error) {
+            console.error("❌ Error while sending shape through WebSocket:", error);
         }
     }
+    
     
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

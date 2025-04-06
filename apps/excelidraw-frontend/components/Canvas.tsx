@@ -129,18 +129,20 @@ export function Canvas(props : params){
         game?.setStrokeFill(stFill);
     },[stFill,game])
 
-    useEffect(()=>{
-        if(canvasRef.current && props.roomId){
-            const canvas=canvasRef.current;
-            const ctx=canvas.getContext('2d');
-            if(!ctx) return;
-            const obj=new Game(canvas,ctx,String(props.roomId),props.socket);
+    useEffect(() => {
+        if (canvasRef.current && props.roomId) {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const obj = new Game(canvas, ctx, String(props.roomId), props.socket);
             setGame(obj);
-            return ()=>{
+            console.log("Game instance created with socket readyState:", props.socket.readyState);
+            return () => {
                 obj.destroy();
-            }
+                console.log("Game instance destroyed");
+            };
         }
-    },[canvasRef,clear]);
+    }, [canvasRef, clear, props.socket]); // Add props.socket as dependency
 
     useEffect(()=>{
         game?.setStrokeWidth(stWidth);
@@ -149,6 +151,13 @@ export function Canvas(props : params){
     useEffect(()=>{
        game?.setStyle(stStyle); 
     },[stStyle,game])
+    useEffect(() => {
+        console.log("Received socket with readyState:", props.socket.readyState);
+        props.socket.onopen = () => console.log("Socket opened in Canvas");
+        props.socket.onclose = (event) => console.log("Socket closed in Canvas with code:", event.code, "reason:", event.reason);
+        props.socket.onerror = (error) => console.error("Socket error in Canvas:", error);
+        props.socket.onmessage = (event) => console.log("Message received in Canvas:", event.data);
+    }, [props.socket]); // Run when socket changes
 
     const btnStyle=`px-1.5 py-1.5 rounded-md`; 
     const router=useRouter();
@@ -217,14 +226,20 @@ export function Canvas(props : params){
                         clicked.current=false;
                     }} onMouseEnter={()=>setMsg('erase anything')} onMouseLeave={()=>setMsg('')}  className={`${btnStyle} ${shape=='eraser'?'bg-blue-500':'bg-none'} ${shape!='eraser' && 'hover:bg-zinc-500'} `}><EraserIcon/></button>
                 </div>
-                <button onClick={async ()=>{
-                    props.socket.send(JSON.stringify({
-                        type:'clear',
-                        roomId:Number(props.roomId)
-                    }))
-                    setClear(!clear);
-                    console.log('clear : '+props.roomId);
-                }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><TrashIcon/></button>
+                <button onClick={async () => {
+    if (props.socket.readyState === WebSocket.OPEN) {
+        props.socket.send(JSON.stringify({
+            type: 'clear',
+            roomId: props.roomId // Keep as string, match server expectation
+        }));
+        setClear(!clear);
+        console.log('Cleared room:', props.roomId);
+    } else {
+        console.warn("Socket not open for clear. readyState:", props.socket.readyState);
+    }
+}} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}>
+    <TrashIcon/>
+</button>
                 <button onClick={()=>{
                     router.push('/dashboard');
                 }} 

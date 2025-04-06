@@ -16,7 +16,9 @@ export default function RoomCanvas(props : params){
     const [socket,setSocket]=useState<WebSocket | null>(null);
     useEffect(()=>{
         const token=localStorage.getItem('token');
+        console.log("This is the JWT token here ",token)
         const ws=new WebSocket(`${WS_URL}?token=${token}`);
+        console.log(ws)
         ws.onopen=()=>{
             setSocket(ws);
             ws.send(JSON.stringify({
