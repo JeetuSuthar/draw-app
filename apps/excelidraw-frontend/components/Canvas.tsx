@@ -129,20 +129,18 @@ export function Canvas(props : params){
         game?.setStrokeFill(stFill);
     },[stFill,game])
 
-    useEffect(() => {
-        if (canvasRef.current && props.roomId) {
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            const obj = new Game(canvas, ctx, String(props.roomId), props.socket);
+    useEffect(()=>{
+        if(canvasRef.current && props.roomId){
+            const canvas=canvasRef.current;
+            const ctx=canvas.getContext('2d');
+            if(!ctx) return;
+            const obj=new Game(canvas,ctx,String(props.roomId),props.socket);
             setGame(obj);
-            console.log("Game instance created with socket readyState:", props.socket.readyState);
-            return () => {
+            return ()=>{
                 obj.destroy();
-                console.log("Game instance destroyed");
-            };
+            }
         }
-    }, [canvasRef, clear, props.socket]); // Add props.socket as dependency
+    },[canvasRef,clear]);
 
     useEffect(()=>{
         game?.setStrokeWidth(stWidth);
@@ -151,13 +149,6 @@ export function Canvas(props : params){
     useEffect(()=>{
        game?.setStyle(stStyle); 
     },[stStyle,game])
-    useEffect(() => {
-        console.log("Received socket with readyState:", props.socket.readyState);
-        props.socket.onopen = () => console.log("Socket opened in Canvas");
-        props.socket.onclose = (event) => console.log("Socket closed in Canvas with code:", event.code, "reason:", event.reason);
-        props.socket.onerror = (error) => console.error("Socket error in Canvas:", error);
-        props.socket.onmessage = (event) => console.log("Message received in Canvas:", event.data);
-    }, [props.socket]); // Run when socket changes
 
     const btnStyle=`px-1.5 py-1.5 rounded-md`; 
     const router=useRouter();
@@ -170,7 +161,7 @@ export function Canvas(props : params){
                         setShape('pan');
                         eraseRef.current=false;
                         clicked.current=false;
-                    }} onMouseEnter={()=>setMsg('panning')} onMouseLeave={()=>setMsg('')} className={`${btnStyle} ${shape=='pan'?'bg-blue-500':'bg-none'} ${shape!='pan' && 'hover:bg-zinc-500'}  text-white`}><HandIcon/></button>
+                    }} onMouseEnter={()=>setMsg('panning')} onMouseLeave={()=>setMsg('')} className={`${btnStyle} ${shape=='pan'?'bg-blue-500':'bg-none'} ${shape!='pan' && 'hover:bg-zinc-500'}  `}><HandIcon/></button>
                     <button onClick={()=>{
                         setType('select');
                         setShape('select');
@@ -218,7 +209,7 @@ export function Canvas(props : params){
                         setShape('text');
                         eraseRef.current=false;
                         clicked.current=false;
-                    }} onMouseEnter={()=>setMsg('write something')} onMouseLeave={()=>setMsg('')}  className={`${btnStyle} ${shape=='text'?'bg-blue-500':'bg-none'} ${shape!='text' && 'hover:bg-zinc-500'} ext-white `}><AlphaIcon/></button>         
+                    }} onMouseEnter={()=>setMsg('write something')} onMouseLeave={()=>setMsg('')}  className={`${btnStyle} ${shape=='text'?'bg-blue-500':'bg-none'} ${shape!='text' && 'hover:bg-zinc-500'} `}><AlphaIcon/></button>         
                     <button onClick={()=>{
                         setType('eraser');
                         setShape('eraser');
@@ -226,24 +217,18 @@ export function Canvas(props : params){
                         clicked.current=false;
                     }} onMouseEnter={()=>setMsg('erase anything')} onMouseLeave={()=>setMsg('')}  className={`${btnStyle} ${shape=='eraser'?'bg-blue-500':'bg-none'} ${shape!='eraser' && 'hover:bg-zinc-500'} `}><EraserIcon/></button>
                 </div>
-                <button onClick={async () => {
-    if (props.socket.readyState === WebSocket.OPEN) {
-        props.socket.send(JSON.stringify({
-            type: 'clear',
-            roomId: props.roomId // Keep as string, match server expectation
-        }));
-        setClear(!clear);
-        console.log('Cleared room:', props.roomId);
-    } else {
-        console.warn("Socket not open for clear. readyState:", props.socket.readyState);
-    }
-}} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}>
-    <TrashIcon/>
-</button>
+                <button onClick={async ()=>{
+                    props.socket.send(JSON.stringify({
+                        type:'clear',
+                        roomId:Number(props.roomId)
+                    }))
+                    setClear(!clear);
+                    console.log('clear : '+props.roomId);
+                }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit`}><TrashIcon/></button>
                 <button onClick={()=>{
                     router.push('/dashboard');
                 }} 
-                className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white` }><LogoutIcon color="#ffffff"/> </button>
+                className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit`}><LogoutIcon color="#ffffff"/> </button>
             </div>
             {msg!='' && <div className='absolute items-center w-fit px-3 py-0.5 top-20 bg-zinc-800 left-1/2 transform -translate-x-1/2 rounded-md  font-sans tracking-wide text-zinc-200 '>{msg}</div>}
         
@@ -251,7 +236,7 @@ export function Canvas(props : params){
                 <div className='flex flex-col gap-5 w-full'>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Color</p>
+                        <p className='text-sm mb-2 tracking-wide'>Stroke Color</p>
                         <div className='flex gap-2'>
                             <div className='flex gap-1 pr-2 border-r-2 '>
                             <div onClick={() => { setStrokeColor('#f44336'); setStColor('red-500'); }} className="bg-red-500 rounded w-6 h-6 hover:cursor-pointer"></div>
@@ -265,7 +250,7 @@ export function Canvas(props : params){
                     </div>                   
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide text-white'>Fill Color</p>
+                        <p className='text-sm mb-2 tracking-wide'>Fill Color</p>
                         <div className='flex gap-2'>
                             <div className='flex gap-1 pr-2 border-r-2 '>
                             <div onClick={()=>setStFill('red-400')} className={`bg-red-400 rounded w-6 h-6 hover:cursor-pointer`}></div>
@@ -279,20 +264,20 @@ export function Canvas(props : params){
                     </div>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Width</p>
+                        <p className='text-sm mb-2 tracking-wide'>Stroke Width</p>
                         <div className='flex justify-around'>
-                            <div onClick={()=>{setStWidth(1.5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=1.5 && 'hover:bg-zinc-500'} ${stWidth==1.5 && 'bg-blue-500'} text-white`}><ThinIcon/></div>
-                            <div onClick={()=>{setStWidth(3)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=3 && 'hover:bg-zinc-500'} ${stWidth==3 && 'bg-blue-500'} text-white`}><MidIcon/></div>
-                            <div onClick={()=>{setStWidth(5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=5 && 'hover:bg-zinc-500'} ${stWidth==5 && 'bg-blue-500'} text-white`}><ThickIcon/></div>
+                            <div onClick={()=>{setStWidth(1.5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=1.5 && 'hover:bg-zinc-500'} ${stWidth==1.5 && 'bg-blue-500'}`}><ThinIcon/></div>
+                            <div onClick={()=>{setStWidth(3)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=3 && 'hover:bg-zinc-500'} ${stWidth==3 && 'bg-blue-500'}`}><MidIcon/></div>
+                            <div onClick={()=>{setStWidth(5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=5 && 'hover:bg-zinc-500'} ${stWidth==5 && 'bg-blue-500'}`}><ThickIcon/></div>
                         </div>
                     </div>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Style</p>
+                        <p className='text-sm mb-2 tracking-wide'>Stroke Style</p>
                         <div className='flex justify-around'>
-                            <div onClick={()=>{setStStyle('solid')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='solid' && 'hover:bg-zinc-500'} ${stStyle=='solid' && 'bg-blue-500'} text-white`}><ThinIcon/></div>
-                            <div onClick={()=>{setStStyle('dotted')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dotted' && 'hover:bg-zinc-500'} ${stStyle=='dotted' && 'bg-blue-500'} text-white`}><DottedIcon/></div>
-                            <div onClick={()=>{setStStyle('dashed')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dashed' && 'hover:bg-zinc-500'} ${stStyle=='dashed' && 'bg-blue-500'} text-white`}><DashedIcon/></div>
+                            <div onClick={()=>{setStStyle('solid')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='solid' && 'hover:bg-zinc-500'} ${stStyle=='solid' && 'bg-blue-500'}`}><ThinIcon/></div>
+                            <div onClick={()=>{setStStyle('dotted')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dotted' && 'hover:bg-zinc-500'} ${stStyle=='dotted' && 'bg-blue-500'}`}><DottedIcon/></div>
+                            <div onClick={()=>{setStStyle('dashed')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dashed' && 'hover:bg-zinc-500'} ${stStyle=='dashed' && 'bg-blue-500'}`}><DashedIcon/></div>
                         </div>
                     </div>
 
