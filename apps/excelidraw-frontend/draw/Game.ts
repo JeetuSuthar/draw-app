@@ -44,7 +44,7 @@ export class Game{
     private dx : number;
     private dy : number;
 
-    constructor(canvas : HTMLCanvasElement,ctx: CanvasRenderingContext2D, roomId :  | string, socket : WebSocket){
+    constructor(canvas : HTMLCanvasElement,ctx: CanvasRenderingContext2D, roomId : string, socket : WebSocket){
         this.ctx = ctx;
         this.canvas = canvas;
         this.strokeColor = '#ffffff';
@@ -147,9 +147,9 @@ export class Game{
     }
 
     async init(){
-        //@ts-ignore
-        this.existingShapes = await getExistingShapes(this.roomId);
-        this.clearCanvas();
+        console.log("Inside the init function")
+        // this.existingShapes = await getExistingShapes(String(this.roomId) );
+        // this.clearCanvas();
     }
 
     initHandlers(){
@@ -631,21 +631,19 @@ export class Game{
     send(shape: Shape) {
         console.log("Shape is ", shape);
     
-        try {
-            if (this.socket.readyState === WebSocket.OPEN) {
+      
+            // if (this.socket.readyState === WebSocket.OPEN) {
                 console.log("Shape is (inside IF)", shape);
                 this.socket.send(JSON.stringify({
                     type: 'chat',
                     roomId: Number(this.roomId),
                     shape: shape
                 }));
-            } else {
-                console.warn("⚠️ WebSocket not open. Cannot send shape.");
-                console.log("Current readyState:", this.socket.readyState); // 0, 1, 2, or 3
-            }
-        } catch (error) {
-            console.error("❌ Error while sending shape through WebSocket:", error);
-        }
+            // } else {
+            //     console.warn("⚠️ WebSocket not open. Cannot send shape.");
+            //     console.log("Current readyState:", this.socket.readyState); // 0, 1, 2, or 3
+            // }
+     
     }
     
     

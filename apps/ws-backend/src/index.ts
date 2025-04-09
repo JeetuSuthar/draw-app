@@ -1,13 +1,15 @@
 
 import { prismaClient } from "@repo/db/client"; 
-
+import "dotenv/config"
 import {WebSocket,WebSocketServer} from "ws";
 import jwt,{ JwtPayload } from "jsonwebtoken";
 
 
-const JWT_SECRET=process.env.JWT_SECRET as string;
+const JWT_SECRET=process.env.JWT_SECRET!;
+console.log("JWT is here ")
 
 const wss=new WebSocketServer({port:8080});
+console.log("WSS")
 
 interface Message {
     message : string,  
@@ -24,28 +26,38 @@ interface ConnectedUser {
 const UserArr : ConnectedUser[]=[];
 
 function authenticateUser(token : string) : string | null{
+    console.log("inside authenticator")
     try{
         const decoded=jwt.verify(token,JWT_SECRET);
+        console.log("Decoeded",decoded);
         if(typeof decoded=="string") return null;
         if(!decoded || !decoded.userId) return null;
+        console.log("decoedded user id ",decoded.userId)
         return decoded.userId;
     }catch(e){
+        console.log("Error is here",e)
         return null;
     }
 }
 console.log("Maling connetion")
 wss.on('connection',function connection(ws,request){
+console.log("Server is up")
     const url=request.url;
+    
+    console.log("URL IS ",url)
     if(!url) return;
+   
     
     const queryParams=new URLSearchParams(url.split('?')[1]);
     const token=queryParams.get('token') ?? "";
     const userAuthentication=authenticateUser(token);
-    
+    console.log("Outside the userAuth")
     if(userAuthentication==null){
+        console.log("Inside userAuth")
         ws.close();
         return;
     }
+    
 
     UserArr.push({
         ws : ws,
