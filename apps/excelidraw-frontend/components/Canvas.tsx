@@ -57,26 +57,35 @@ export function Canvas(props: params) {
     }, []);
     useEffect(() => {
         const socket = props.socket;
-
+    
         const handleMessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
-
+    
+            console.log("Received message:", data); // Log message to check what data is being received
+            
             if (data.type === 'user-list' && data.roomId === props.roomId) {
                 setUsers(data.users); // ✅ update users
             }
-
+    
             if (data.type === 'user-joined' && data.roomId === props.roomId) {
-                toast.success(`${data.userId} joined the room`);
+                toast.success(`${data.username} joined the room`);
+            }
+    
+            if (data.type === 'user-left' && data.roomId === props.roomId) {
+                toast.info(`${data.username} left the room`);
+    
+                // Update users list
+                setUsers(prevUsers => prevUsers.filter(user => user !== data.userId));
             }
         };
-
+    
         socket.addEventListener('message', handleMessage);
-
+    
         return () => {
             socket.removeEventListener('message', handleMessage);
         };
     }, [props.socket, props.roomId]);
-
+    
 
     document.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key == '0') {
@@ -281,10 +290,15 @@ export function Canvas(props: params) {
                     setClear(!clear);
                     console.log('clear : ' + props.roomId);
                 }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><TrashIcon /></button>
-                <button onClick={() => {
-                    router.push('/dashboard');
-                }}
-                    className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><LogoutIcon color="#ffffff" /> </button>
+              <button 
+    onClick={() => {
+        router.push('/rooms');
+    }}
+    className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}
+>
+    <LogoutIcon color="#ffffff" />
+</button>
+
             </div>
         </div>
         {msg != '' && <div className='absolute items-center w-fit px-3 py-0.5 top-20 bg-zinc-800 left-1/2 transform -translate-x-1/2 rounded-md  font-sans tracking-wide text-zinc-200 '>{msg}</div>}

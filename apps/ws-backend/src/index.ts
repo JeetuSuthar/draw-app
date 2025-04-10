@@ -21,7 +21,7 @@ interface ConnectedUser {
     userId: string
 }
 
-const UserArr: ConnectedUser[] = [];
+let UserArr: ConnectedUser[] = [];
 
 function authenticateUser(token: string): string | null {
     console.log("inside authenticator");
@@ -56,11 +56,34 @@ wss.on('connection', function connection(ws, request) {
         return;
     }
     
-    UserArr.push({
+    const user = {
         ws: ws,
         rooms: [],
         userId: userAuthentication
+    };
+    UserArr.push(user);
+
+    // Handling disconnection
+    ws.on('close', () => {
+        console.log(`User ${user.userId} disconnected`);
+    
+        // Remove user from the array when they disconnect
+        UserArr = UserArr.filter(u => u.ws !== ws);
+        
+        // Notify other users in the same rooms
+        user.rooms.forEach(roomId => {
+            UserArr.forEach(u => {
+                if (u.rooms.includes(roomId)) {
+                    u.ws.send(JSON.stringify({
+                        type: 'user-left',
+                        roomId: roomId,
+                        userId: user.userId  // Ensure this is the correct userId
+                    }));
+                }
+            });
+        });
     });
+    
 
     ws.on('message', async function message(data) {
         try {
