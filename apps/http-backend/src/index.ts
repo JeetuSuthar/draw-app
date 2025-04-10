@@ -134,23 +134,28 @@ app.get('/chats/:roomId',async(req,res)=>{
     console.log(e)
 }
 })
-app.get('/rooms', async (req, res) => {
+app.get('/rooms', middleware, async (req, res) => {
+    // @ts-ignore
+    const userId = req.userId;
+  
     try {
-        const rooms = await prismaClient.room.findMany({
-            select: {
-                id: true,  // roomId
-                slug: true
-            }
-        });
-
-        res.json({
-            rooms
-        });
+      const rooms = await prismaClient.room.findMany({
+        where: {
+          adminId: userId
+        },
+        select: {
+          id: true,
+          slug: true
+        }
+      });
+  
+      res.json({ rooms });
     } catch (e) {
-        console.log(e);
-        res.status(500).json({ message: "Something went wrong" });
+      console.log(e);
+      res.status(500).json({ message: "Something went wrong" });
     }
-});
+  });
+  
 
 app.get("/room/:slug", async (req, res) => {
     const slug = req.params.slug;

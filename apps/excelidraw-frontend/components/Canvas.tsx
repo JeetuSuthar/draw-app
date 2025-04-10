@@ -161,7 +161,7 @@ export function Canvas(props : params){
                         setShape('pan');
                         eraseRef.current=false;
                         clicked.current=false;
-                    }} onMouseEnter={()=>setMsg('panning')} onMouseLeave={()=>setMsg('')} className={`${btnStyle} ${shape=='pan'?'bg-blue-500':'bg-none'} ${shape!='pan' && 'hover:bg-zinc-500'}  `}><HandIcon/></button>
+                    }} onMouseEnter={()=>setMsg('panning')} onMouseLeave={()=>setMsg('')} className={`${btnStyle} ${shape=='pan'?'bg-blue-500':'bg-none'} ${shape!='pan' && 'hover:bg-zinc-500'}  text-white`}><HandIcon/></button>
                     <button onClick={()=>{
                         setType('select');
                         setShape('select');
@@ -224,11 +224,11 @@ export function Canvas(props : params){
                     }))
                     setClear(!clear);
                     console.log('clear : '+props.roomId);
-                }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit`}><TrashIcon/></button>
+                }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><TrashIcon/></button>
                 <button onClick={()=>{
                     router.push('/dashboard');
                 }} 
-                className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit`}><LogoutIcon color="#ffffff"/> </button>
+                className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><LogoutIcon color="#ffffff"/> </button>
             </div>
             {msg!='' && <div className='absolute items-center w-fit px-3 py-0.5 top-20 bg-zinc-800 left-1/2 transform -translate-x-1/2 rounded-md  font-sans tracking-wide text-zinc-200 '>{msg}</div>}
         
@@ -236,7 +236,7 @@ export function Canvas(props : params){
                 <div className='flex flex-col gap-5 w-full'>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide'>Stroke Color</p>
+                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Color</p>
                         <div className='flex gap-2'>
                             <div className='flex gap-1 pr-2 border-r-2 '>
                             <div onClick={() => { setStrokeColor('#f44336'); setStColor('red-500'); }} className="bg-red-500 rounded w-6 h-6 hover:cursor-pointer"></div>
@@ -250,7 +250,7 @@ export function Canvas(props : params){
                     </div>                   
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide'>Fill Color</p>
+                        <p className='text-sm mb-2 tracking-wide text-white'>Fill Color</p>
                         <div className='flex gap-2'>
                             <div className='flex gap-1 pr-2 border-r-2 '>
                             <div onClick={()=>setStFill('red-400')} className={`bg-red-400 rounded w-6 h-6 hover:cursor-pointer`}></div>
@@ -264,20 +264,20 @@ export function Canvas(props : params){
                     </div>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide'>Stroke Width</p>
+                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Width</p>
                         <div className='flex justify-around'>
-                            <div onClick={()=>{setStWidth(1.5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=1.5 && 'hover:bg-zinc-500'} ${stWidth==1.5 && 'bg-blue-500'}`}><ThinIcon/></div>
-                            <div onClick={()=>{setStWidth(3)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=3 && 'hover:bg-zinc-500'} ${stWidth==3 && 'bg-blue-500'}`}><MidIcon/></div>
-                            <div onClick={()=>{setStWidth(5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=5 && 'hover:bg-zinc-500'} ${stWidth==5 && 'bg-blue-500'}`}><ThickIcon/></div>
+                            <div onClick={()=>{setStWidth(1.5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=1.5 && 'hover:bg-zinc-500'} ${stWidth==1.5 && 'bg-blue-500'} text-white`}><ThinIcon/></div>
+                            <div onClick={()=>{setStWidth(3)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=3 && 'hover:bg-zinc-500'} ${stWidth==3 && 'bg-blue-500'} text-white`}><MidIcon/></div>
+                            <div onClick={()=>{setStWidth(5)}} className={`px-2 rounded hover:cursor-pointer ${stWidth!=5 && 'hover:bg-zinc-500'} ${stWidth==5 && 'bg-blue-500'} text-white`}><ThickIcon/></div>
                         </div>
                     </div>
 
                     <div>
-                        <p className='text-sm mb-2 tracking-wide'>Stroke Style</p>
+                        <p className='text-sm mb-2 tracking-wide text-white'>Stroke Style</p>
                         <div className='flex justify-around'>
-                            <div onClick={()=>{setStStyle('solid')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='solid' && 'hover:bg-zinc-500'} ${stStyle=='solid' && 'bg-blue-500'}`}><ThinIcon/></div>
-                            <div onClick={()=>{setStStyle('dotted')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dotted' && 'hover:bg-zinc-500'} ${stStyle=='dotted' && 'bg-blue-500'}`}><DottedIcon/></div>
-                            <div onClick={()=>{setStStyle('dashed')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dashed' && 'hover:bg-zinc-500'} ${stStyle=='dashed' && 'bg-blue-500'}`}><DashedIcon/></div>
+                            <div onClick={()=>{setStStyle('solid')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='solid' && 'hover:bg-zinc-500'} ${stStyle=='solid' && 'bg-blue-500'} text-white`}><ThinIcon/></div>
+                            <div onClick={()=>{setStStyle('dotted')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dotted' && 'hover:bg-zinc-500'} ${stStyle=='dotted' && 'bg-blue-500'} text-white`}><DottedIcon/></div>
+                            <div onClick={()=>{setStStyle('dashed')}} className={`px-2 rounded hover:cursor-pointer ${stStyle!='dashed' && 'hover:bg-zinc-500'} ${stStyle=='dashed' && 'bg-blue-500'} text-white`}><DashedIcon/></div>
                         </div>
                     </div>
 
