@@ -20,11 +20,11 @@ export default function Header() {
               <Link href="#how-it-works" className="text-base font-medium dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400">
                 How It Works
               </Link>
-              <Link href="#pricing" className="text-base font-medium dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400">
-                Pricing
+              <Link href="#features" className="text-base font-medium dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400">
+               Featues
               </Link>
-              <Link href="/canvas" className="text-base font-medium dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400">
-                Canvas
+              <Link href="#cta" className="text-base font-medium dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400">
+                CTA
               </Link>
             </div>
           </div>

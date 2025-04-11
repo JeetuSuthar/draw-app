@@ -4,6 +4,7 @@ import Features from '@/components/Features'
 import HowItWorks from '@/components/HowItWorks'
 
 import Footer from '@/components/Footer'
+import CTA from '@/components/CTA'
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
           </video>
         </div>
         </div>
+        <CTA />
         
       </main>
       <Footer />

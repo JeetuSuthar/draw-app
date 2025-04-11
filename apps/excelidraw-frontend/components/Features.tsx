@@ -1,84 +1,109 @@
-import { Pen, Users, Zap, Globe, Layers, Lock, Share2, History } from 'lucide-react';
+"use client"
+
+import { useRef } from "react"
+import { useInView } from "framer-motion"
+import { motion } from "framer-motion"
+import { Pen, Users, Zap, Globe, Layers, Lock, Share2, History } from 'lucide-react'
 
 const features = [
   {
-    name: 'Intuitive Drawing Tools',
-    description: 'Sketch and draw with ease using our simple yet powerful tools.',
+    name: "Intuitive Drawing Tools",
+    description: "Sketch and draw with ease using our simple yet powerful tools.",
     icon: Pen,
   },
   {
-    name: 'Real-time Collaboration',
-    description: 'Work together with your team in real-time, no matter where you are.',
+    name: "Real-time Collaboration",
+    description: "Work together with your team in real-time, no matter where you are.",
     icon: Users,
   },
   {
-    name: 'Lightning Fast',
-    description: 'Experience smooth and responsive drawing with our optimized performance.',
+    name: "Lightning Fast",
+    description: "Experience smooth and responsive drawing with our optimized performance.",
     icon: Zap,
   },
   {
-    name: 'Accessible Anywhere',
-    description: 'Access your whiteboards from any device with an internet connection.',
+    name: "Accessible Anywhere",
+    description: "Access your whiteboards from any device with an internet connection.",
     icon: Globe,
   },
   {
-    name: 'Infinite Canvas',
-    description: 'Unlimited space to bring your ideas to life, with easy navigation.',
+    name: "Infinite Canvas",
+    description: "Unlimited space to bring your ideas to life, with easy navigation.",
     icon: Layers,
   },
   {
-    name: 'Secure and Private',
-    description: 'Your drawings are encrypted and stored securely.',
+    name: "Secure and Private",
+    description: "Your drawings are encrypted and stored securely.",
     icon: Lock,
   },
   {
-    name: 'Multi-User Editing',
-    description: 'Multiple users can edit the same drawing simultaneously.',
+    name: "Multi-User Editing",
+    description: "Multiple users can edit the same drawing simultaneously.",
     icon: Share2,
   },
   {
-    name: 'Version History',
-    description: 'Track and restore previous changes to your drawings effortlessly.',
+    name: "Version History",
+    description: "Track and restore previous changes to your drawings effortlessly.",
     icon: History,
   },
-];
+]
 
 export default function Features() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  
   return (
-    <div className="py-12 bg-white dark:bg-gray-900" id="features">
+    <div className="py-24 bg-white dark:bg-gray-900" id="features" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center">
-          <h2 className="text-base text-indigo-600 dark:text-indigo-400 font-semibold tracking-wide uppercase">
-            Features
-          </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="inline-flex items-center px-4 py-1.5 mb-4 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+          >
+            <span className="flex h-2 w-2 mr-2 rounded-full bg-purple-500"></span>
+            Powerful Features
+          </motion.div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             Everything you need to create and collaborate
+          </h2>
+          <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">
+            CollabDraw provides all the tools you need for effective visual collaboration.
           </p>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-            Excalidraw provides all the tools you need for effective visual collaboration.
-          </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-10">
-          <dl className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-            {features.map((feature) => (
-              <div key={feature.name} className="relative">
-                <dt>
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+        <div className="mt-16">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.name}
+                className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
+              >
+                <div className="absolute -top-3 -left-3">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg transform transition-transform duration-300 group-hover:scale-110">
                     <feature.icon className="h-6 w-6" aria-hidden="true" />
                   </div>
-                  <p className="ml-16 text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+                </div>
+                <div className="mt-2 pt-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     {feature.name}
+                  </h3>
+                  <p className="text-base text-gray-500 dark:text-gray-400">
+                    {feature.description}
                   </p>
-                </dt>
-                <dd className="mt-2 ml-16 text-base text-gray-500 dark:text-gray-400">
-                  {feature.description}
-                </dd>
-              </div>
+                </div>
+              </motion.div>
             ))}
-          </dl>
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
