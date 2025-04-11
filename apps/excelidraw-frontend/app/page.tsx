@@ -5,10 +5,13 @@ import HowItWorks from '@/components/HowItWorks'
 
 import Footer from '@/components/Footer'
 import CTA from '@/components/CTA'
+import { ThemeProvider } from 'next-themes'
 
 export default function Home() {
   return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+
       <Header />
       <main>
         <Hero />
@@ -26,5 +29,6 @@ export default function Home() {
       </main>
       <Footer />
     </div>
+    </ThemeProvider>
   )
 }
