@@ -11,25 +11,36 @@ https://drive.google.com/file/d/1qX8LpXrjJY6gZ8vstEsz88HrGBitQedt/view?usp=shari
 
 
 ---
+## ✨ Features
 
-## 🚀 Features
+- 🖊️ **Real-Time Drawing**  
+  Draw simultaneously with others in live rooms using WebSocket-based communication.
 
-- 🖊️ **Real-Time Drawing** — Draw with friends live using WebSockets.
-- 👥 **Room-Based Collaboration** — Join or create rooms to work with others.
-- 🔐 **Authentication** — Secure access using JWT-based login system.
-- 🧠 **Math + Physics Powered Canvas** — No external libraries, just pure logic and creativity.
-- ⚡ **Monorepo Architecture** — Managed with TurboRepo for scalable development.
-- 🌐 **Fullstack TypeScript** — Backend + frontend powered by modern TypeScript setup.
+- 🧠 **Custom Canvas Engine**  
+  Built from scratch using pure math and physics — no external canvas libraries used.
+
+- 👥 **Room-Based Collaboration**  
+  Join or create a room, and collaborate in real-time with others.
+
+- 🔐 **JWT Authentication**  
+  Secure login and session management via JSON Web Tokens.
+
+- 🧩 **Monorepo Architecture**  
+  Uses TurboRepo to handle frontend and backend within a single, scalable monorepo.
+
+- 📦 **Reusable Packages**  
+  Shared utilities and types across projects using the monorepo structure.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend:** Next.js, Tailwind CSS, TypeScript  
-- **Backend:** WebSockets, HTTP, Prisma ORM  
-- **Architecture:** TurboRepo (Monorepo)  
-- **Authentication:** JWT (JSON Web Tokens)  
-- **Database:** PostgreSQL (via Prisma)
+| Layer           | Tech Used                             |
+|----------------|----------------------------------------|
+| Frontend        | Next.js, TypeScript, Tailwind CSS     |
+| Backend         | WebSockets, HTTP, Prisma ORM          |
+| Authentication  | JWT                                   |
+| Architecture    | TurboRepo (Monorepo)                  |
+| Database        | PostgreSQL                            |
 
 ---
-
