@@ -91,7 +91,7 @@ export default function Hero() {
           >
             <span className="block mb-2">Collaborate and create</span>
             <span className="block bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              with excalidraw
+              with CollabDraw
             </span>
           </motion.h1>
           
@@ -147,19 +147,20 @@ export default function Hero() {
               <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/10 to-indigo-600/10 mix-blend-overlay dark:mix-blend-overlay rounded-xl"></div>
               
               {/* Reflection effect */}
+              
               <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent mix-blend-overlay rounded-xl"></div>
               
               <Image
                 className="w-full block dark:hidden rounded-xl"
                 src="https://res.cloudinary.com/dwnapxhev/image/upload/v1737348443/Excalidraw_Live_Presentation_bihmed.png"
-                alt="Excalidraw Whiteboard"
+                alt="CollabDraw Whiteboard"
                 width={1200}
                 height={800}
               />
               <Image
                 className="w-full hidden dark:block rounded-xl"
                 src="https://i.ibb.co/ssw377M/darkmodehero.png"
-                alt="Excalidraw Whiteboard"
+                alt="CollabDraw Whiteboard"
                 width={1200}
                 height={800}
               />

@@ -22,10 +22,10 @@ export default function HowItWorks() {
       <div className="relative max-w-xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
         <div className="relative">
           <h2 className="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-            How excalidraw Works
+            How CollabDraw Works
           </h2>
           <p className="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500 dark:text-gray-400">
-            Get started with excalidraw in just a few simple steps.
+            Get started with CollabDraw in just a few simple steps.
           </p>
         </div>
 
@@ -35,7 +35,7 @@ export default function HowItWorks() {
               Start collaborating in minutes
             </h3>
             <p className="mt-3 text-lg text-gray-500">
-              excalidraw is designed to be intuitive and easy to use. Follow these simple steps to get started with your team.
+              CollabDraw is designed to be intuitive and easy to use. Follow these simple steps to get started with your team.
             </p>
 
             <dl className="mt-10 space-y-10">
@@ -63,7 +63,7 @@ export default function HowItWorks() {
               width={490}
               height={490}
               src="https://res.cloudinary.com/dwnapxhev/image/upload/v1737349141/community_hero_image_afxlos.svg"
-              alt="How excalidraw Works"
+              alt="How CollabDraw Works"
             />
           </div>
         </div>

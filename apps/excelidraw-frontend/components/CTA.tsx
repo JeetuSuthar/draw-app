@@ -30,7 +30,7 @@ export default function CTA() {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Join thousands of teams who use Excalidraw to bring their ideas to life.
+            Join thousands of teams who use Collabdraw to bring their ideas to life.
           </motion.p>
           <motion.div
             className="mt-8 flex justify-center gap-4 flex-wrap"
