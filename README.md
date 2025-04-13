@@ -1,3 +1,7 @@
+[![Watch the demo](./thumbnail.jpg)](https://drive.google.com/file/d/1qX8LpXrjJY6gZ8vstEsz88HrGBitQedt/view?usp=sharing)
+
+
+
 # Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
