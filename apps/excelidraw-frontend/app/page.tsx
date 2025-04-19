@@ -9,7 +9,7 @@ import { ThemeProvider } from 'next-themes'
 
 export default function Home() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    // <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       <Header />
@@ -29,6 +29,6 @@ export default function Home() {
       </main>
       <Footer />
     </div>
-    </ThemeProvider>
+    // </ThemeProvider>
   )
 }
