@@ -1,3 +1,4 @@
+"use client"
 import { getExistingShapes } from "./http";
 import { eraser_Shape } from "./eraser";
 import { selectedShape } from "./select";

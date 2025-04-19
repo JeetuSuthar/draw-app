@@ -7,7 +7,6 @@ import { Menu, X, Sun, Moon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const navigation = [
-  
   { name: "How it works", href: "#how-it-works" },
   { name: "Features", href: "#features" },
   { name: "CTA", href: "#cta" },
@@ -16,8 +15,10 @@ const navigation = [
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
 
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
@@ -25,6 +26,11 @@ export default function Header() {
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Handle mounting - prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
   }, [])
 
   return (
@@ -73,12 +79,17 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+            {/* Theme toggle button - only render after mounted */}
+            {mounted ? (
+              <button
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
+              >
+                {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+            ) : (
+              <div className="w-9 h-9" /> // Placeholder with same dimensions
+            )}
 
             <Link
               href="/signin"
@@ -157,12 +168,17 @@ export default function Header() {
                     Sign in
                   </Link>
                   <div className="ml-3">
-                    <button
-                      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                      className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
-                    >
-                      {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                    </button>
+                    {/* Theme toggle in mobile menu - only render after mounted */}
+                    {mounted ? (
+                      <button
+                        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                        className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
+                      >
+                        {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                      </button>
+                    ) : (
+                      <div className="w-9 h-9" /> // Placeholder
+                    )}
                   </div>
                 </div>
                 <div>
