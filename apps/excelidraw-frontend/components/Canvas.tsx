@@ -20,6 +20,32 @@ import { DottedIcon } from '@/icons/dotted';
 import { DashedIcon } from '@/icons/dashed';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+// ------- Shared Types & Palette Exports -------
+export type Color = string; // Used for stroke and fill color
+export type Theme = "light" | "dark" | string; // Can be extended for theming
+
+// Enum for tool types
+export enum Tool {
+  Pan = "pan",
+  Select = "select",
+  Rectangle = "rectangle",
+  Circle = "circle",
+  Diamond = "diamond",
+  Arrow = "arrow",
+  Line = "line",
+  Pencil = "pencil",
+  Text = "text",
+  Eraser = "eraser",
+}
+
+// Color palette used in color selector
+export const colors: Color[] = [
+  '#f44336', // Red
+  '#4caf50', // Green
+  '#2196f3', // Blue
+  '#fff500', // Yellow
+  '#ffffff', // White
+];
 
 interface params {
     roomId: string
