@@ -25,18 +25,24 @@ export type Color = string; // Used for stroke and fill color
 export type Theme = "light" | "dark" | string; // Can be extended for theming
 
 // Enum for tool types
-export enum Tool {
-  Pan = "pan",
-  Select = "select",
-  Rectangle = "rectangle",
-  Circle = "circle",
-  Diamond = "diamond",
-  Arrow = "arrow",
-  Line = "line",
-  Pencil = "pencil",
-  Text = "text",
-  Eraser = "eraser",
-}
+export type Tool =
+  | 'point'
+  | 'select'
+  | 'hand'
+  | 'pan'
+  | 'rect'
+  | 'rectangle'
+  | 'rhombus'
+  | 'diamond'
+  | 'circle'
+  | 'line'
+  | 'arrow'
+  | 'pencil'
+  | 'text'
+  | 'erase'
+  | 'eraser'
+  | 'clear';
+
 
 // Color palette used in color selector
 export const colors: Color[] = [
