@@ -132,7 +132,7 @@ wss.on('connection', function connection(ws, request) {
                 });
             
                 // Create a mapping from userId to user's name
-                const userIdToNameMap = usersInRoomWithNames.reduce((acc, userFromDB) => {
+                const userIdToNameMap = usersInRoomWithNames.reduce((acc:any, userFromDB:any) => {
                     if (userFromDB.name !== null) {
                         acc[userFromDB.id] = userFromDB.name;
                     }
