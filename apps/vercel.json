@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd apps/excelidraw-frontend && pnpm build",
+  "outputDirectory": "apps/excelidraw-frontend/.next",
+  "framework": "nextjs"
+}
