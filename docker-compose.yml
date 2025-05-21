@@ -1,0 +1,35 @@
+services:
+  http-backend:
+    build:
+      context: .
+      dockerfile: ./apps/http-backend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    depends_on:
+      - ws-backend
+
+  ws-backend:
+    build:
+      context: .
+      dockerfile: ./apps/ws-backend/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./apps/excelidraw-frontend/Dockerfile  # Fixed the folder name
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    depends_on:
+      - http-backend
+      - ws-backend
