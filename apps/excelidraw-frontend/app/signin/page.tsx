@@ -31,7 +31,7 @@ export default function SignInPage() {
     setLoading(true)
     setAuthError(null)
     try {
-      const response = await axios.post("http://localhost:3001/signin", data)
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/signin`, data)
       if (response.data.token) {
         localStorage.setItem("token", response.data.token)
         if (data.rememberMe) {

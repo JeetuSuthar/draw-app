@@ -80,7 +80,7 @@ export default function RoomManager() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get("http://localhost:3001/rooms", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/rooms`, {
         headers: { Authorization: `${token}` },
       })
 
@@ -114,7 +114,7 @@ export default function RoomManager() {
     try {
       const token = localStorage.getItem("token")
       const response = await axios.post(
-        "http://localhost:3001/room",
+        `${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/room`,
         { name: newRoomName },
         {
           headers: { Authorization: `${token}` },
@@ -163,7 +163,7 @@ export default function RoomManager() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`http://localhost:3001/room/${roomToDelete.id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/room/${roomToDelete.id}`, {
         headers: { Authorization: `${token}` },
       })
 
