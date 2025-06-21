@@ -6,7 +6,12 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "db:generate": "cd packages/db && pnpm prisma generate && cd ../..",
+    "start:web": "cd apps/excelidraw-frontend && pnpm run start",
+    "start:backend": "cd apps/http-backend && pnpm run dev",
+    "start:websocket": "cd apps/ws-backend && pnpm run dev"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

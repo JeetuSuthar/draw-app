@@ -1,0 +1,30 @@
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+# Build argument for database URL
+ARG DATABASE_URL
+
+# Copy package files
+COPY ./packages ./packages
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./package.json ./package.json
+COPY ./turbo.json ./turbo.json
+COPY ./apps/excelidraw-frontend ./apps/excelidraw-frontend
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml  
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Install dependencies
+RUN pnpm install
+
+# Generate Prisma client
+RUN pnpm run db:generate
+
+# Build the application with DATABASE_URL
+RUN DATABASE_URL=${DATABASE_URL} pnpm run build
+
+EXPOSE 3000
+
+CMD ["pnpm", "run", "start:web"]
