@@ -88,7 +88,7 @@ export default function SignUpPage() {
     setAuthError(null)
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/signup`, {
+      await axios.post(`https://draw-app-backend-bt3f.onrender.com/signup`, {
         name: data.name,
         username: data.email,
         password: data.password,

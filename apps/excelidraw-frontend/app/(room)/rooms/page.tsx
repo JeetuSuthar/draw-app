@@ -80,7 +80,7 @@ export default function RoomManager() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/rooms`, {
+      const response = await axios.get(`https://draw-app-backend-bt3f.onrender.com/rooms`, {
         headers: { Authorization: `${token}` },
       })
 
@@ -114,7 +114,7 @@ export default function RoomManager() {
     try {
       const token = localStorage.getItem("token")
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/room`,
+        `https://draw-app-backend-bt3f.onrender.com/room`,
         { name: newRoomName },
         {
           headers: { Authorization: `${token}` },
@@ -163,7 +163,7 @@ export default function RoomManager() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`${process.env.NEXT_PUBLIC_HTTP_BACKEND_URL}/room/${roomToDelete.id}`, {
+      await axios.delete(`https://draw-app-backend-bt3f.onrender.com/room/${roomToDelete.id}`, {
         headers: { Authorization: `${token}` },
       })
 
