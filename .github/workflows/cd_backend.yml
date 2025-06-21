@@ -24,4 +24,4 @@ jobs:
           context: .
           file: ./docker/Dockerfile.backend
           push: true
-          tags: jeetusuthar/draw-app-backend:${{ github.sha }}
+          tags: jeetusuthar/draw-app-http:${{ github.sha }}
