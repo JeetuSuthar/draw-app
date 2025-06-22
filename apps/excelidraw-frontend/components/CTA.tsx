@@ -17,7 +17,7 @@ export default function CTA() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <motion.h2
-            className="text-3xl font-extrabold text-white sm:text-4xl"
+            className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
@@ -25,7 +25,7 @@ export default function CTA() {
             Ready to transform your team's collaboration?
           </motion.h2>
           <motion.p
-            className="mt-4 text-xl text-purple-100"
+            className="mt-4 text-base sm:text-lg lg:text-xl text-purple-100"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -45,7 +45,6 @@ export default function CTA() {
               Get started 
               <ArrowRight className="ml-2 h-4 w-4 text-purple-600 transition-transform group-hover:translate-x-1" />
             </Link>
-            
           </motion.div>
         </div>
       </div>

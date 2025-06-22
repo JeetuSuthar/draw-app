@@ -18,7 +18,7 @@ export default function Home() {
         <Features />
         <HowItWorks />
         <div className='pt-5 pb-10 mb-10'>
-        <div className="h-[50%] my-5 flex items-center w-[60%] mx-auto justify-center rounded-xl overflow-hidden scale-110 z-30">
+        <div className="sm:h-[50%] my-5 flex items-center w-[90%] sm:w-[60%] mx-auto justify-center rounded-xl overflow-hidden scale-110 z-30">
           <video width="100%" height="100%" autoPlay loop muted>
             <source src="/Demo-vid.mp4" type="video/mp4" />
           </video>

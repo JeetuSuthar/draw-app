@@ -18,31 +18,33 @@ export default function Header() {
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
     }
-
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Handle mounting - prevent hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
 
   return (
     <header
-      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm" : "bg-transparent"}`}
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
+          {/* Logo */}
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M15 3.5C16.9587 3.5 18.3575 3.5 19.3888 3.88698C20.5585 4.33456 21.4937 5.15463 22.0284 6.22593C22.5 7.17771 22.5 8.42353 22.5 10.9152V15.5C22.5 17.9917 22.5 19.2375 22.0284 20.1893C21.4937 21.2606 20.5585 22.0806 19.3888 22.5282C18.3575 22.9152 16.9587 22.9152 15 22.9152H9C7.04128 22.9152 5.64253 22.9152 4.6112 22.5282C3.44151 22.0806 2.50628 21.2606 1.97161 20.1893C1.5 19.2375 1.5 17.9917 1.5 15.5V10.9152C1.5 8.42353 1.5 7.17771 1.97161 6.22593C2.50628 5.15463 3.44151 4.33456 4.6112 3.88698C5.64253 3.5 7.04128 3.5 9 3.5H15Z"
                     stroke="white"
@@ -55,7 +57,18 @@ export default function Header() {
             </Link>
           </div>
 
-          <div className="-mr-2 -my-2 md:hidden">
+          {/* Mobile: Theme toggle + Hamburger */}
+          <div className="flex items-center space-x-2 md:hidden">
+            {mounted ? (
+              <button
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
+              >
+                {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+            ) : (
+              <div className="w-9 h-9" />
+            )}
             <button
               type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
@@ -66,6 +79,7 @@ export default function Header() {
             </button>
           </div>
 
+          {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-10">
             {navigation.map((item) => (
               <Link
@@ -78,8 +92,8 @@ export default function Header() {
             ))}
           </nav>
 
+          {/* Desktop buttons */}
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
-            {/* Theme toggle button - only render after mounted */}
             {mounted ? (
               <button
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -88,7 +102,7 @@ export default function Header() {
                 {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
             ) : (
-              <div className="w-9 h-9" /> // Placeholder with same dimensions
+              <div className="w-9 h-9" />
             )}
 
             <Link
@@ -97,7 +111,6 @@ export default function Header() {
             >
               Sign in
             </Link>
-
             <Link
               href="/signup"
               className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
@@ -108,7 +121,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -123,7 +136,7 @@ export default function Header() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                         <path
                           d="M15 3.5C16.9587 3.5 18.3575 3.5 19.3888 3.88698C20.5585 4.33456 21.4937 5.15463 22.0284 6.22593C22.5 7.17771 22.5 8.42353 22.5 10.9152V15.5C22.5 17.9917 22.5 19.2375 22.0284 20.1893C21.4937 21.2606 20.5585 22.0806 19.3888 22.5282C18.3575 22.9152 16.9587 22.9152 15 22.9152H9C7.04128 22.9152 5.64253 22.9152 4.6112 22.5282C3.44151 22.0806 2.50628 21.2606 1.97161 20.1893C1.5 19.2375 1.5 17.9917 1.5 15.5V10.9152C1.5 8.42353 1.5 7.17771 1.97161 6.22593C2.50628 5.15463 3.44151 4.33456 4.6112 3.88698C5.64253 3.5 7.04128 3.5 9 3.5H15Z"
                           stroke="white"
@@ -160,35 +173,18 @@ export default function Header() {
                 </div>
               </div>
               <div className="py-6 px-5 space-y-6">
-                <div className="flex items-center justify-between">
-                  <Link
-                    href="/signin"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                  >
-                    Sign in
-                  </Link>
-                  <div className="ml-3">
-                    {/* Theme toggle in mobile menu - only render after mounted */}
-                    {mounted ? (
-                      <button
-                        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                        className="p-2 rounded-full text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none"
-                      >
-                        {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                      </button>
-                    ) : (
-                      <div className="w-9 h-9" /> // Placeholder
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <Link
-                    href="/signup"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
-                  >
-                    Sign up
-                  </Link>
-                </div>
+                <Link
+                  href="/signin"
+                  className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                >
+                  Sign up
+                </Link>
               </div>
             </div>
           </motion.div>

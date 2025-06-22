@@ -51,9 +51,9 @@ const features = [
 export default function Features() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
-  
+
   return (
-    <div className="py-24 bg-white dark:bg-gray-900" id="features" ref={ref}>
+    <div className="py-20 bg-white dark:bg-gray-900" id="features" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           className="text-center"
@@ -62,40 +62,40 @@ export default function Features() {
           transition={{ duration: 0.5 }}
         >
           <motion.div 
-            className="inline-flex items-center px-4 py-1.5 mb-4 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+            className="inline-flex items-center px-4 py-1.5 mb-4 rounded-full text-xs sm:text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
           >
             <span className="flex h-2 w-2 mr-2 rounded-full bg-purple-500"></span>
             Powerful Features
           </motion.div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Everything you need to create and collaborate
           </h2>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">
+          <p className="mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-gray-400 mx-auto">
             CollabDraw provides all the tools you need for effective visual collaboration.
           </p>
         </motion.div>
 
-        <div className="mt-16">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 sm:mt-16">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.name}
-                className="relative bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group"
+                className="relative bg-white dark:bg-gray-800 p-5 sm:p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
               >
                 <div className="absolute -top-3 -left-3">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg transform transition-transform duration-300 group-hover:scale-110">
-                    <feature.icon className="h-6 w-6" aria-hidden="true" />
+                  <div className="flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+                    <feature.icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
                   </div>
                 </div>
                 <div className="mt-2 pt-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     {feature.name}
                   </h3>
-                  <p className="text-base text-gray-500 dark:text-gray-400">
+                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                     {feature.description}
                   </p>
                 </div>
