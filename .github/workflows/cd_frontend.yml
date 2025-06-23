@@ -36,6 +36,6 @@ jobs:
             docker stop draw_frontend || true &&
             docker rm draw_frontend || true &&
             docker pull jeetusuthar/draw-app-frontend:${{ github.sha }} &&
-            docker run --name draw_frontend -d -p 80:80 \
+            docker run --name draw_frontend -d -p 3000:3000 \
               jeetusuthar/draw-app-frontend:${{ github.sha }}
           "
