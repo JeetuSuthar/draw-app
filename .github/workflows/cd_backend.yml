@@ -9,19 +9,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout the code
+      - name:  Checkout the code
         uses: actions/checkout@v2
 
-      - name: 🐳 Docker login
+      - name:  Docker login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 🏗️ Build and push Docker image
+      - name:  Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./docker/Dockerfile.backend
           push: true
           tags: jeetusuthar/draw-app-http:${{ github.sha }}
+
+      - name:  Deploy to the VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@${{ secrets.VM_IP }} -t "
+            docker stop draw_backend || true &&
+            docker rm draw_backend || true &&
+            docker pull jeetusuthar/draw-app-http:${{ github.sha }} &&
+            docker run --name draw_backend -d -p 3001:3001 \
+              -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
+              jeetusuthar/draw-app-http:${{ github.sha }} 
+          "
