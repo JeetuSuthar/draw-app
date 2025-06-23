@@ -80,7 +80,7 @@ export default function RoomManager() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get(`http://206.189.137.154:3001/rooms`, {
+      const response = await axios.get(`https://collabdraw.run.place/api/rooms`, {
         headers: { Authorization: `${token}` },
       })
 
@@ -114,7 +114,7 @@ export default function RoomManager() {
     try {
       const token = localStorage.getItem("token")
       const response = await axios.post(
-        `http://206.189.137.154:3001/room`,
+        `https://collabdraw.run.place/api/room`,
         { name: newRoomName },
         {
           headers: { Authorization: `${token}` },
@@ -163,7 +163,7 @@ export default function RoomManager() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`http://206.189.137.154:3001/room/${roomToDelete.id}`, {
+      await axios.delete(`https://collabdraw.run.place/api/room/${roomToDelete.id}`, {
         headers: { Authorization: `${token}` },
       })
 

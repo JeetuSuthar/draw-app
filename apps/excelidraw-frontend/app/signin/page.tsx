@@ -31,7 +31,7 @@ export default function SignInPage() {
     setLoading(true)
     setAuthError(null)
     try {
-      const response = await axios.post(`http://206.189.137.154:3001/signin`, data)
+      const response = await axios.post(`https://collabdraw.run.place/api/signin`, data)
       if (response.data.token) {
         localStorage.setItem("token", response.data.token)
         if (data.rememberMe) {
