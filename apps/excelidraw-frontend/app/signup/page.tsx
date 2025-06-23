@@ -32,10 +32,7 @@ export default function SignUpPage() {
   const [authError, setAuthError] = useState<string | null>(null)
 
   const onSubmit = async (data: AuthFormData) => {
-    if (!data.acceptTerms) {
-      setAuthError("You must accept the terms and conditions")
-      return
-    }
+    
 
     setLoading(true)
     setAuthError(null)
