@@ -9,16 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name:  Checkout the code
+      - name: 📥 Checkout the code
         uses: actions/checkout@v2
 
-      - name:  DockerHub Login
+      - name: 🐳 DockerHub Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name:  Build and Push Docker Image
+      - name: 🏗️ Build and Push Docker Image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -27,3 +27,15 @@ jobs:
           tags: jeetusuthar/draw-app-frontend:${{ github.sha }}
           build-args: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
+
+      - name: 🚀 Deploy Frontend to VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@206.189.137.154 -t "
+            docker stop draw_frontend || true &&
+            docker rm draw_frontend || true &&
+            docker pull jeetusuthar/draw-app-frontend:${{ github.sha }} &&
+            docker run --name draw_frontend -d -p 80:80 \
+              jeetusuthar/draw-app-frontend:${{ github.sha }}
+          "

@@ -2,7 +2,7 @@ name: Deploy the WS
 
 on:
   push:
-    branches: [main]  # or your actual branch
+    branches: [main]
 
 jobs:
   build:
@@ -25,3 +25,15 @@ jobs:
           file: ./docker/Dockerfile.ws
           push: true
           tags: jeetusuthar/draw-app-ws:${{ github.sha }}
+
+      - name: 🚀 Deploy WS to VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@206.189.137.154 -t "
+            docker stop draw_ws || true &&
+            docker rm draw_ws || true &&
+            docker pull jeetusuthar/draw-app-ws:${{ github.sha }} &&
+            docker run --name draw_ws -d -p 8080:8080 \
+              jeetusuthar/draw-app-ws:${{ github.sha }}
+          "
