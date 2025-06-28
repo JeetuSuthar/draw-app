@@ -8,9 +8,13 @@ const iconComponents = {
   PencilRuler,
   ExternalLink,
   Presentation,
-};
+} as const;
 
-const steps = [
+const steps: {
+  icon: keyof typeof iconComponents;
+  name: string;
+  description: string;
+}[] = [
   { icon: 'Presentation', name: 'Create a board', description: 'Start with a blank canvas or choose from our templates.' },
   { icon: 'Mail', name: 'Invite your team', description: 'Share a link and collaborate in real-time with your team.' },
   { icon: 'PencilRuler', name: 'Sketch and ideate', description: 'Use our intuitive tools to bring your ideas to life.' },
@@ -41,7 +45,7 @@ export default function HowItWorks() {
 
             <dl className="mt-10 space-y-10">
               {steps.map((step) => {
-                //@ts-ignore
+               
                 const IconComponent = iconComponents[step.icon];
                 return (
                   <div key={step.name} className="relative">
