@@ -160,7 +160,7 @@ export default function SignInPage() {
           </form>
         </div>
 
-        <div className="p-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+        <div className="p-6  bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
             Don't have an account?{' '}
             <Link
@@ -169,6 +169,13 @@ export default function SignInPage() {
             >
               Sign up
             </Link>
+          </div>
+          <div className="text-center  text-sm text-gray-600 dark:text-gray-400">
+          
+            <span className="text-purple-500">Username</span>:ok@gmail.com
+          </div>
+          <div className="text-center  text-sm text-gray-600 dark:text-gray-400">
+           <span className="text-purple-500">Password</span>:ok@gmail.com
           </div>
         </div>
       </div>

@@ -205,6 +205,13 @@ export default function SignUpPage() {
                 Sign in
               </Link>
             </div>
+            <div className="text-center  text-sm text-gray-600 dark:text-gray-400">
+          
+            <span className="text-purple-500">Username</span>:ok@gmail.com
+          </div>
+          <div className="text-center  text-sm text-gray-600 dark:text-gray-400">
+           <span className="text-purple-500">Password</span>:ok@gmail.com
+          </div>
           </div>
         </div>
       </div>
