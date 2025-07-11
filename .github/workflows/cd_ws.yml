@@ -36,5 +36,6 @@ jobs:
             docker pull jeetusuthar/draw-app-ws:${{ github.sha }} &&
             docker run --name draw_ws -d -p 8080:8080 \
               -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+              -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
               jeetusuthar/draw-app-ws:${{ github.sha }}
           "
