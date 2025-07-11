@@ -34,7 +34,7 @@ jobs:
             docker stop draw_ws || true &&
             docker rm draw_ws || true &&
             docker pull jeetusuthar/draw-app-ws:${{ github.sha }} &&
-           docker run --name draw_ws -d -p 8080:8080 \
-            -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
-            jeetusuthar/draw-app-ws:${{ github.sha }}
+            docker run --name draw_ws -d -p 8080:8080 \
+              -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+              jeetusuthar/draw-app-ws:${{ github.sha }}
           "

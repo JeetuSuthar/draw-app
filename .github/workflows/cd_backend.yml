@@ -36,5 +36,6 @@ jobs:
             docker pull jeetusuthar/draw-app-http:${{ github.sha }} &&
             docker run --name draw_backend -d -p 3001:3001 \
               -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
+              -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
               jeetusuthar/draw-app-http:${{ github.sha }}
           "
