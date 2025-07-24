@@ -1,2 +1,2 @@
-export const HTTP_BACKEND = "https://collabdraw.run.place/api";
-export const WS_URL = "wss://collabdraw.run.place/socket";
+export const HTTP_BACKEND = "https://draw-app-ws-bis6.onrender.com";
+export const WS_URL = "https://draw-app-backend-bt3f.onrender.com";
