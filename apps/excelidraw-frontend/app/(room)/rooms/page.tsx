@@ -80,7 +80,7 @@ export default function RoomManager() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get(`https://collabdraw-hes1.onrender.com/api/rooms`, {
+      const response = await axios.get(`https://draw-app-backend-bt3f.onrender.com/rooms`, {
         headers: { Authorization: `${token}` },
       })
 
@@ -114,7 +114,7 @@ export default function RoomManager() {
     try {
       const token = localStorage.getItem("token")
       const response = await axios.post(
-        `https://collabdraw-hes1.onrender.com/api/room`,
+        `https://draw-app-backend-bt3f.onrender.com/room`,
         { name: newRoomName },
         {
           headers: { Authorization: `${token}` },
@@ -163,7 +163,7 @@ export default function RoomManager() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`https://collabdraw-hes1.onrender.com/api/room/${roomToDelete.id}`, {
+      await axios.delete(`https://draw-app-backend-bt3f.onrender.com/room/${roomToDelete.id}`, {
         headers: { Authorization: `${token}` },
       })
 
