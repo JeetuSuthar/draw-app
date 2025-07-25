@@ -38,7 +38,7 @@ export default function SignUpPage() {
     setAuthError(null)
 
     try {
-      await axios.post(`https://collabdraw-hes1.onrender.com/api/signup`, {
+      await axios.post(`https://draw-app-backend-bt3f.onrender.com/api/signup`, {
         name: data.name,
         username: data.email,
         password: data.password,
