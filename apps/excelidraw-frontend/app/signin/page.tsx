@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { HTTP_BACKEND } from "@/config"
 
 interface AuthFormData {
   username: string
@@ -31,7 +32,7 @@ export default function SignInPage() {
     setLoading(true)
     setAuthError(null)
     try {
-      const response = await axios.post(`https://draw-app-backend-bt3f.onrender.com/signin`, data)
+      const response = await axios.post(`${HTTP_BACKEND}/signin`, data)
       if (response.data.token) {
         localStorage.setItem("token", response.data.token)
         if (data.rememberMe) {

@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { HTTP_BACKEND } from "@/config"
 
 interface Room {
   id: number
@@ -80,7 +81,7 @@ export default function RoomManager() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get(`https://draw-app-backend-bt3f.onrender.com/rooms`, {
+      const response = await axios.get(`${HTTP_BACKEND}/rooms`, {
         headers: { Authorization: `${token}` },
       })
 
@@ -114,7 +115,7 @@ export default function RoomManager() {
     try {
       const token = localStorage.getItem("token")
       const response = await axios.post(
-        `https://draw-app-backend-bt3f.onrender.com/room`,
+        `${HTTP_BACKEND}/room`,
         { name: newRoomName },
         {
           headers: { Authorization: `${token}` },
@@ -163,7 +164,7 @@ export default function RoomManager() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`https://draw-app-backend-bt3f.onrender.com/room/${roomToDelete.id}`, {
+      await axios.delete(`${HTTP_BACKEND}/room/${roomToDelete.id}`, {
         headers: { Authorization: `${token}` },
       })
 

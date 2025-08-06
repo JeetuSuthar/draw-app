@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { HTTP_BACKEND } from "@/config"
 
 interface AuthFormData {
   name: string
@@ -38,7 +39,7 @@ export default function SignUpPage() {
     setAuthError(null)
 
     try {
-      await axios.post(`https://draw-app-backend-bt3f.onrender.com/signup`, {
+      await axios.post(`${HTTP_BACKEND}/signup`, {
         name: data.name,
         username: data.email,
         password: data.password,
