@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Loader2, X, ArrowLeft, Sparkles, GitBranch } from 'lucide-react';
-import { AxiosInstance } from '@/lib/axios';
-import { Game, Shape } from '@/draw/Game';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Loader2, X } from 'lucide-react';
+import { AxiosInstance } from '@/lib/axios'; // Ensure you have an Axios instance set up
+import { Game, Shape } from '@/draw/Game'; // Adjust the import path as necessary
 
 interface AIModalProps {
     open: boolean;
@@ -76,6 +75,7 @@ const AIModal: React.FC<AIModalProps> = ({ open, onClose, game, roomId, userId }
             ctx.lineTo(HeadX2, HeadY2);
             ctx.stroke();
         }
+        // Add other shape types as needed
     };
 
     // Draw the generated shapes on the preview canvas
@@ -84,7 +84,7 @@ const AIModal: React.FC<AIModalProps> = ({ open, onClose, game, roomId, userId }
             const ctx = previewCanvasRef.current.getContext("2d");
             if (ctx) {
                 ctx.clearRect(0, 0, 480, 320);
-                ctx.fillStyle = "#1f2937";
+                ctx.fillStyle = "#222";
                 ctx.fillRect(0, 0, 480, 320);
                 response.forEach(shape => drawShape(ctx, shape));
             }
@@ -116,7 +116,7 @@ const AIModal: React.FC<AIModalProps> = ({ open, onClose, game, roomId, userId }
         setLastPrompt(content);
         try {
             const res = await AxiosInstance.post("/generate-drawing", { type, content, roomId });
-            setResponse(res.data.result || res.data);
+            setResponse(res.data.result || res.data); // Expect Shape[] format
             setObjectPrompt("");
             setFlowPrompt("");
         } catch (err: any) {
@@ -129,7 +129,7 @@ const AIModal: React.FC<AIModalProps> = ({ open, onClose, game, roomId, userId }
     // Insert shapes into the main canvas
     const insertIntoCanvas = () => {
         if (response && game) {
-            game.addShapes(response);
+            game.addShapes(response); // This method needs to be added to Game.ts
         }
         resetModal();
         onClose();
@@ -148,268 +148,79 @@ const AIModal: React.FC<AIModalProps> = ({ open, onClose, game, roomId, userId }
     if (!open) return null;
 
     return (
-        <AnimatePresence>
-            <motion.div 
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-            >
-                <motion.div 
-                    ref={modalRef} 
-                    className={`bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full text-center border border-gray-200 dark:border-gray-700 relative ${response ? "max-w-5xl" : "max-w-lg"}`}
-                    style={response ? { minHeight: 500 } : {}}
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                >
-                    {/* Floating elements */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
-                        <motion.div 
-                            className="absolute top-4 right-16 w-8 h-8 rounded-full bg-purple-200 dark:bg-purple-900/30 blur-md"
-                            animate={{ 
-                                y: [0, 8, 0],
-                                opacity: [0.5, 0.8, 0.5]
-                            }}
-                            transition={{ 
-                                duration: 3, 
-                                repeat: Infinity,
-                                repeatType: "reverse" 
-                            }}
-                        />
-                        <motion.div 
-                            className="absolute bottom-8 left-8 w-6 h-6 rounded-full bg-indigo-200 dark:bg-indigo-900/30 blur-md"
-                            animate={{ 
-                                y: [0, -6, 0],
-                                opacity: [0.3, 0.6, 0.3]
-                            }}
-                            transition={{ 
-                                duration: 4, 
-                                repeat: Infinity,
-                                repeatType: "reverse" 
-                            }}
-                        />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div ref={modalRef} className={`bg-neutral-900 rounded-2xl p-8 shadow-2xl w-full text-center border border-violet-700 relative ${response ? "max-w-4xl" : "max-w-md"}`} style={response ? { minHeight: 500 } : {}}>
+                <button className="absolute top-4 left-4 text-violet-400 hover:text-white transition" onClick={() => { onClose(); resetModal(); }} aria-label="Close">
+                    <X size={22} />
+                </button>
+                <h2 className="text-2xl font-bold text-white mb-6">AI Drawing Assistant</h2>
+
+                {!activeSection && (
+                    <div className="flex flex-row gap-6 justify-center mb-4">
+                        <button className="flex-1 bg-violet-800/70 hover:bg-violet-600 text-white rounded-xl p-6 font-semibold text-lg shadow transition-all duration-200" onClick={() => setActiveSection("object")}>
+                            Draw an Object
+                        </button>
+                        <button className="flex-1 bg-purple-800/70 hover:bg-purple-600 text-white rounded-xl p-6 font-semibold text-lg shadow transition-all duration-200" onClick={() => setActiveSection("flow")}>
+                            Draw a Flow Chart
+                        </button>
                     </div>
+                )}
 
-                    <button 
-                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" 
-                        onClick={() => { onClose(); resetModal(); }} 
-                        aria-label="Close"
-                    >
-                        <X size={20} />
-                    </button>
-
-                    <div className="p-8">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                        >
-                            <div className="inline-flex items-center px-3 py-1.5 mb-6 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200">
-                                <Sparkles className="w-3 h-3 mr-2" />
-                                AI Drawing Assistant
+                {activeSection === "object" && (
+                    <form onSubmit={e => { e.preventDefault(); if (!loading && objectPrompt.trim()) handleSubmit("OBJECT", objectPrompt); }}>
+                        <div className="text-left">
+                            <button className="mb-4 text-violet-400 hover:text-white transition font-semibold" type="button" onClick={() => { setActiveSection(null); setResponse(null); setError(null); }}>
+                                ← Back
+                            </button>
+                        </div>
+                        <div className="mb-6 text-left">
+                            <label className="block text-violet-300 font-semibold mb-2">What object should I draw?</label>
+                            <input type="text" className="w-full px-4 py-2 rounded bg-neutral-800 text-white focus:outline-none mb-1" placeholder="e.g. house, bus..." value={objectPrompt} onChange={e => setObjectPrompt(e.target.value)} disabled={loading} />
+                            {error && <div className="text-red-400">{error}</div>}
+                        </div>
+                        <button type="submit" className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-60" disabled={loading || !objectPrompt.trim()}>
+                            {loading ? <span className="flex items-center gap-2"><Loader2 className="animate-spin" /> Generating...</span> : "Submit"}
+                        </button>
+                        {response && (
+                            <div className="mt-4 flex flex-col items-center w-full">
+                                <div className="text-violet-300 font-semibold mb-2">Generated object for: <span className="text-white">{lastPrompt}</span></div>
+                                <canvas ref={previewCanvasRef} width={480} height={320} style={{ background: "#222", borderRadius: 8, border: "1px solid #444" }} />
+                                <button className="mt-4 px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-semibold transition" onClick={insertIntoCanvas}>
+                                    Insert into Canvas
+                                </button>
                             </div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                                Create with AI
-                            </h2>
-                        </motion.div>
-
-                        {!activeSection && (
-                            <motion.div 
-                                className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <motion.button 
-                                    className="group p-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]"
-                                    onClick={() => setActiveSection("object")}
-                                    whileHover={{ y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <Sparkles className="w-6 h-6 mx-auto mb-2 group-hover:animate-pulse" />
-                                    Draw an Object
-                                    <p className="text-sm text-purple-100 mt-2 font-normal">
-                                        Describe any object and watch AI create it
-                                    </p>
-                                </motion.button>
-                                <motion.button 
-                                    className="group p-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]"
-                                    onClick={() => setActiveSection("flow")}
-                                    whileHover={{ y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <GitBranch className="w-6 h-6 mx-auto mb-2 group-hover:animate-pulse" />
-                                    Draw a Flow Chart
-                                    <p className="text-sm text-indigo-100 mt-2 font-normal">
-                                        Create professional flowcharts instantly
-                                    </p>
-                                </motion.button>
-                            </motion.div>
                         )}
+                    </form>
+                )}
 
-                        {activeSection === "object" && (
-                            <motion.form 
-                                onSubmit={e => { e.preventDefault(); if (!loading && objectPrompt.trim()) handleSubmit("OBJECT", objectPrompt); }}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <div className="text-left">
-                                    <button 
-                                        className="mb-6 inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors font-medium" 
-                                        type="button" 
-                                        onClick={() => { setActiveSection(null); setResponse(null); setError(null); }}
-                                    >
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
-                                        Back
-                                    </button>
-                                </div>
-                                <div className="mb-6 text-left">
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-3">
-                                        What object should I draw?
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" 
-                                        placeholder="e.g. house, car, tree, laptop..." 
-                                        value={objectPrompt} 
-                                        onChange={e => setObjectPrompt(e.target.value)} 
-                                        disabled={loading} 
-                                    />
-                                    {error && (
-                                        <motion.div 
-                                            className="mt-2 text-red-500 text-sm"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                        >
-                                            {error}
-                                        </motion.div>
-                                    )}
-                                </div>
-                                <button 
-                                    type="submit" 
-                                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-[1.02]" 
-                                    disabled={loading || !objectPrompt.trim()}
-                                >
-                                    {loading ? (
-                                        <span className="flex items-center gap-2">
-                                            <Loader2 className="animate-spin w-4 h-4" />
-                                            Creating magic...
-                                        </span>
-                                    ) : "Generate Object"}
+                {activeSection === "flow" && (
+                    <form onSubmit={e => { e.preventDefault(); if (!loading && flowPrompt.trim()) handleSubmit("FLOWCHART", flowPrompt); }}>
+                        <div className="text-left">
+                            <button className="mb-4 text-purple-400 hover:text-white transition font-semibold" type="button" onClick={() => { setActiveSection(null); setResponse(null); setError(null); }}>
+                                ← Back
+                            </button>
+                        </div>
+                        <div className="mb-6 text-left">
+                            <label className="block text-purple-300 font-semibold mb-2">Describe your flow chart</label>
+                            <textarea className="w-full px-4 py-2 resize-none rounded bg-neutral-800 text-white focus:outline-none mb-1" placeholder="e.g. receive request - validate input - query DB - return response" value={flowPrompt} onChange={e => setFlowPrompt(e.target.value)} disabled={loading} rows={3} />
+                            {error && <div className="text-red-400">{error}</div>}
+                        </div>
+                        <button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-60" disabled={loading || !flowPrompt.trim()}>
+                            {loading ? <span className="flex items-center gap-2"><Loader2 className="animate-spin" /> Generating...</span> : "Submit"}
+                        </button>
+                        {response && (
+                            <div className="mt-4 flex flex-col items-center w-full">
+                                <div className="text-purple-300 font-semibold mb-2">Generated flowchart for: <span className="text-white">{lastPrompt}</span></div>
+                                <canvas ref={previewCanvasRef} width={480} height={320} style={{ background: "#222", borderRadius: 8, border: "1px solid #444" }} />
+                                <button className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition" onClick={insertIntoCanvas}>
+                                    Insert into Canvas
                                 </button>
-                                {response && (
-                                    <motion.div 
-                                        className="mt-8 flex flex-col items-center w-full"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                    >
-                                        <div className="text-gray-700 dark:text-gray-300 font-medium mb-4">
-                                            Generated object: <span className="text-purple-600 dark:text-purple-400 font-semibold">{lastPrompt}</span>
-                                        </div>
-                                        <div className="relative rounded-lg overflow-hidden shadow-lg">
-                                            <canvas 
-                                                ref={previewCanvasRef} 
-                                                width={480} 
-                                                height={320} 
-                                                className="rounded-lg border border-gray-200 dark:border-gray-700" 
-                                            />
-                                        </div>
-                                        <button 
-                                            className="mt-6 px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02]" 
-                                            onClick={insertIntoCanvas}
-                                        >
-                                            Insert into Canvas
-                                        </button>
-                                    </motion.div>
-                                )}
-                            </motion.form>
+                            </div>
                         )}
-
-                        {activeSection === "flow" && (
-                            <motion.form 
-                                onSubmit={e => { e.preventDefault(); if (!loading && flowPrompt.trim()) handleSubmit("FLOWCHART", flowPrompt); }}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <div className="text-left">
-                                    <button 
-                                        className="mb-6 inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors font-medium" 
-                                        type="button" 
-                                        onClick={() => { setActiveSection(null); setResponse(null); setError(null); }}
-                                    >
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
-                                        Back
-                                    </button>
-                                </div>
-                                <div className="mb-6 text-left">
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-3">
-                                        Describe your flow chart
-                                    </label>
-                                    <textarea 
-                                        className="w-full px-4 py-3 resize-none rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" 
-                                        placeholder="e.g. user login process, data validation flow, decision tree..." 
-                                        value={flowPrompt} 
-                                        onChange={e => setFlowPrompt(e.target.value)} 
-                                        disabled={loading} 
-                                        rows={3} 
-                                    />
-                                    {error && (
-                                        <motion.div 
-                                            className="mt-2 text-red-500 text-sm"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                        >
-                                            {error}
-                                        </motion.div>
-                                    )}
-                                </div>
-                                <button 
-                                    type="submit" 
-                                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-[1.02]" 
-                                    disabled={loading || !flowPrompt.trim()}
-                                >
-                                    {loading ? (
-                                        <span className="flex items-center gap-2">
-                                            <Loader2 className="animate-spin w-4 h-4" />
-                                            Creating flowchart...
-                                        </span>
-                                    ) : "Generate Flowchart"}
-                                </button>
-                                {response && (
-                                    <motion.div 
-                                        className="mt-8 flex flex-col items-center w-full"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                    >
-                                        <div className="text-gray-700 dark:text-gray-300 font-medium mb-4">
-                                            Generated flowchart: <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{lastPrompt}</span>
-                                        </div>
-                                        <div className="relative rounded-lg overflow-hidden shadow-lg">
-                                            <canvas 
-                                                ref={previewCanvasRef} 
-                                                width={480} 
-                                                height={320} 
-                                                className="rounded-lg border border-gray-200 dark:border-gray-700" 
-                                            />
-                                        </div>
-                                        <button 
-                                            className="mt-6 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02]" 
-                                            onClick={insertIntoCanvas}
-                                        >
-                                            Insert into Canvas
-                                        </button>
-                                    </motion.div>
-                                )}
-                            </motion.form>
-                        )}
-                    </div>
-                </motion.div>
-            </motion.div>
-        </AnimatePresence>
+                    </form>
+                )}
+            </div>
+        </div>
     );
 };
 
