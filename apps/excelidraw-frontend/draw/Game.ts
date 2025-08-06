@@ -636,6 +636,13 @@ export class Game{
             shape:shape
         }));
     }
+    addShapes(shapes: Shape[]) {
+        shapes.forEach(shape => {
+            this.existingShapes.push(shape);
+            this.send(shape);
+        });
+        this.clearCanvas();
+    }
 
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

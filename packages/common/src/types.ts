@@ -11,3 +11,8 @@ export const SigninSchema = z.object({
 export const CreateRoomSchema = z.object({
     name: z.string().min(3).max(20),
 })
+export const drawingSchema = z.object({
+  type: z.enum(["OBJECT", "FLOWCHART"]),
+  content: z.string(),
+  roomId: z.string()
+});

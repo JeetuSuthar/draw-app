@@ -20,37 +20,39 @@ import { DottedIcon } from '@/icons/dotted';
 import { DashedIcon } from '@/icons/dashed';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import AIModal from './AIModal'; // Adjust the path based on your project structure
+
 // ------- Shared Types & Palette Exports -------
 export type Color = string; // Used for stroke and fill color
 export type Theme = "light" | "dark" | string; // Can be extended for theming
 
 // Enum for tool types
 export type Tool =
-  | 'point'
-  | 'select'
-  | 'hand'
-  | 'pan'
-  | 'rect'
-  | 'rectangle'
-  | 'rhombus'
-  | 'diamond'
-  | 'circle'
-  | 'line'
-  | 'arrow'
-  | 'pencil'
-  | 'text'
-  | 'erase'
-  | 'eraser'
-  | 'clear';
+    | 'point'
+    | 'select'
+    | 'hand'
+    | 'pan'
+    | 'rect'
+    | 'rectangle'
+    | 'rhombus'
+    | 'diamond'
+    | 'circle'
+    | 'line'
+    | 'arrow'
+    | 'pencil'
+    | 'text'
+    | 'erase'
+    | 'eraser'
+    | 'clear';
 
 
 // Color palette used in color selector
 export const colors: Color[] = [
-  '#f44336', // Red
-  '#4caf50', // Green
-  '#2196f3', // Blue
-  '#fff500', // Yellow
-  '#ffffff', // White
+    '#f44336', // Red
+    '#4caf50', // Green
+    '#2196f3', // Blue
+    '#fff500', // Yellow
+    '#ffffff', // White
 ];
 
 interface params {
@@ -74,6 +76,7 @@ export function Canvas(props: params) {
     const [stWidth, setStWidth] = useState(1.5);
     const [stStyle, setStStyle] = useState('solid'); // dotted,dashed
     const [users, setUsers] = useState<string[]>([])
+    const [showAIModal, setShowAIModal] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -89,35 +92,35 @@ export function Canvas(props: params) {
     }, []);
     useEffect(() => {
         const socket = props.socket;
-    
+
         const handleMessage = (event: MessageEvent) => {
             const data = JSON.parse(event.data);
-    
+
             console.log("Received message:", data); // Log message to check what data is being received
-            
+
             if (data.type === 'user-list' && data.roomId === props.roomId) {
                 setUsers(data.users); // ✅ update users
             }
-    
+
             if (data.type === 'user-joined' && data.roomId === props.roomId) {
                 toast.success(`${data.username} joined the room`);
             }
-    
+
             if (data.type === 'user-left' && data.roomId === props.roomId) {
                 toast.info(`${data.username} left the room`);
-    
+
                 // Update users list
                 setUsers(prevUsers => prevUsers.filter(user => user !== data.userId));
             }
         };
-    
+
         socket.addEventListener('message', handleMessage);
-    
+
         return () => {
             socket.removeEventListener('message', handleMessage);
         };
     }, [props.socket, props.roomId]);
-    
+
 
     document.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key == '0') {
@@ -322,14 +325,23 @@ export function Canvas(props: params) {
                     setClear(!clear);
                     console.log('clear : ' + props.roomId);
                 }} className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}><TrashIcon /></button>
-              <button 
-    onClick={() => {
-        router.push('/rooms');
-    }}
-    className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}
->
-    <LogoutIcon color="#ffffff" />
-</button>
+                <button
+                    onClick={() => setShowAIModal(true)}
+                    onMouseEnter={() => setMsg('generate with AI')} // Optional: assumes you have a setMsg function for tooltips
+                    onMouseLeave={() => setMsg('')} // Optional: clears tooltip
+                    className={`${btnStyle} bg-none hover:bg-blue-500 py-1 h-fit text-white`}
+                >
+                    AI
+                </button>
+                <button
+
+                    onClick={() => {
+                        router.push('/rooms');
+                    }}
+                    className={`${btnStyle} bg-none hover:bg-red-500 py-1 h-fit text-white`}
+                >
+                    <LogoutIcon color="#ffffff" />
+                </button>
 
             </div>
         </div>
@@ -389,6 +401,15 @@ export function Canvas(props: params) {
             </div>
 
         </div>
+        {showAIModal && (
+    <AIModal
+        open={showAIModal}
+        onClose={() => setShowAIModal(false)}
+        game={game} // Your Game instance
+        roomId={props.roomId} // Assumes roomId is a prop
+        userId="user-id-placeholder" // Replace with actual userId
+    />
+)}
         <canvas ref={canvasRef} width={width} height={height}></canvas>
     </div>
 

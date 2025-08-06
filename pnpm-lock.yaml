@@ -141,6 +141,9 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.9
+      axios:
+        specifier: ^1.7.9
+        version: 1.8.4
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
