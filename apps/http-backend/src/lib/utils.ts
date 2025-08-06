@@ -1,3 +1,26 @@
+import { Response } from "express";
+import jwt from "jsonwebtoken"
+import { JWT_SECRET } from "@repo/backend-common/config";
+
+export const generateToken = (userId: string, res: Response) => {
+    const token = jwt.sign({ userId }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
+  
+    res.cookie("collabodraw_jwt", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      httpOnly: true, 
+      sameSite: "lax", 
+      secure: true,
+    });
+  
+    return token;
+};
+
+export function generateUniqueId(): string {
+  return Math.random().toString(36).substr(2, 9);
+}
+
 export function createObjectDrawingPrompt(objectName: string, roomId: string, userId: string): string {
   return `You are a drawing assistant that converts object names into drawing coordinates. 
   Given the object "${objectName}", create a simple but recognizable visual representation using basic shapes.
