@@ -44,6 +44,39 @@ export class Game{
     private panning : boolean;
     private dx : number;
     private dy : number;
+    private convertAPIShapeToGameShape(apiShape: any): Shape {
+    return {
+        type: apiShape.type.toLowerCase(), // Handle uppercase types from API
+        startX: apiShape.x || apiShape.startX || 0,
+        startY: apiShape.y || apiShape.startY || 0,
+        width: apiShape.width || 0,
+        height: apiShape.height || 0,
+        strokeStyle: apiShape.color || apiShape.strokeStyle || "#ffffff",
+        strokeFill: apiShape.strokeFill || apiShape.color || "transparent",
+        strokeWidth: apiShape.strokeWidth || 2,
+        stStyle: apiShape.stStyle || "solid",
+        chatId: apiShape.chatId || apiShape.id || Date.now().toString(),
+        text: apiShape.textContent || apiShape.text,
+        points: this.convertPoints(apiShape)
+    };
+}
+
+private convertPoints(apiShape: any): { x: number, y: number }[] | undefined {
+    if (apiShape.points && Array.isArray(apiShape.points)) {
+        return apiShape.points; // Pencil tool format
+    }
+    
+    // Handle API line/arrow format with endX/endY
+    if (apiShape.points && apiShape.points.endX !== undefined) {
+        return [
+            { x: apiShape.x || 0, y: apiShape.y || 0 },
+            { x: apiShape.points.endX, y: apiShape.points.endY }
+        ];
+    }
+    
+    return undefined;
+}
+
 
     constructor(canvas : HTMLCanvasElement,ctx: CanvasRenderingContext2D, roomId :  | string, socket : WebSocket){
         this.ctx = ctx;
@@ -636,13 +669,17 @@ export class Game{
             shape:shape
         }));
     }
-    addShapes(shapes: Shape[]) {
-        shapes.forEach(shape => {
-            this.existingShapes.push(shape);
-            this.send(shape);
-        });
-        this.clearCanvas();
-    }
+    addShapes(shapes: any[]) {
+    // Convert API shapes to your internal Shape format
+    const convertedShapes = shapes.map(shape => this.convertAPIShapeToGameShape(shape));
+    
+    convertedShapes.forEach(shape => {
+        this.existingShapes.push(shape);
+        this.send(shape);
+    });
+    this.clearCanvas();
+}
+
 
     clearCanvas(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
