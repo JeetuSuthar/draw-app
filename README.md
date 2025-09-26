@@ -817,10 +817,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
-
-For support, email support@collabdraw.com or join our [Discord community](https://discord.gg/collabdraw).
-
----
-
-**Made with ❤️ by the CollabDraw Team**
