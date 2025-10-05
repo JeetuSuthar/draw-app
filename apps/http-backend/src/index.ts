@@ -232,7 +232,7 @@ const checkRoom = await prismaClient.room.findUnique({
     // }
 
     // const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
-     const geminiApiKey = process.env.GEMINI_API_KEY || "AIzaSyDYxm3vXOEpyiXryMHAMctxmpQfcQCdUrE";
+     const geminiApiKey = process.env.GEMINI_API_KEY ;
 const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
 
 
