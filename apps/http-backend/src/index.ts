@@ -1,10 +1,10 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
-import { middleware } from "./middleware";
+import { middleware } from "./middleware.js";
 import { CreateUserSchema, SigninSchema, CreateRoomSchema, drawingSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
-import { createFlowchartPrompt, createObjectDrawingPrompt, generateUniqueId } from "./lib/utils"
+import { createFlowchartPrompt, createObjectDrawingPrompt, generateUniqueId } from "./lib/utils.js"
 import axios from "axios"
 import cors from "cors";
 
