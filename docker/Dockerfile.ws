@@ -22,7 +22,14 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Generate Prisma client from db package
-RUN pnpm --filter @repo/db exec prisma generate   
+RUN pnpm run db:generate
+
+# Build all packages first (including workspace packages)
+RUN pnpm --filter @repo/backend-common build
+RUN pnpm --filter @repo/db build
+
+# Build the ws-backend app
+RUN pnpm --filter ws-backend build
 
 EXPOSE 8081
 
