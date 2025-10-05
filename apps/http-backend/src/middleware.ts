@@ -9,7 +9,7 @@ interface AuthenticatedRequest extends ExpressRequest {
 }
 
 export function middleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  const token = req.headers["authorization"] ?? "";
+  const token = req.headers["authorization"] || "EMPTY TOKEN";
 
   try {
     // Change the type assertion to string

@@ -10,7 +10,6 @@ import { UserPlus, Mail, Lock, Eye, EyeOff, ArrowLeft, User, Check } from "lucid
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { HTTP_BACKEND } from "@/config"
 
@@ -18,7 +17,7 @@ interface AuthFormData {
   name: string
   email: string
   password: string
-  acceptTerms: boolean
+ 
 }
 
 export default function SignUpPage() {

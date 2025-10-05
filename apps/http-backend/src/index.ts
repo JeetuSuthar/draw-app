@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { middleware } from "./middleware";
-import { CreateUserSchema, SigninSchema, CreateRoomSchema,drawingSchema } from "@repo/common/types";
+import { CreateUserSchema, SigninSchema, CreateRoomSchema, drawingSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 import { createFlowchartPrompt, createObjectDrawingPrompt, generateUniqueId } from "./lib/utils"
 import axios from "axios"
@@ -13,9 +13,9 @@ app.use(express.json());
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, curl, etc.)
+
       if (!origin) return callback(null, true);
-      
+
       const allowedOrigins = ["https://collabdraw-hes1.onrender.com", "http://localhost:3000"];
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
@@ -28,168 +28,169 @@ app.use(
   })
 );
 
-
 app.post("/signup", async (req, res) => {
 
-    const parsedData = CreateUserSchema.safeParse(req.body);
-   // console.log(parsedData)
-    if (!parsedData.success) {
-        console.log(parsedData.error);
-        res.json({
-            message: "Incorrect inputs"
-        })
-        return;
-    }
-    try {
-        console.log("In try")
-        console.log(parsedData.success);
-       
-            const user = await prismaClient.user.create({
-                data: {
-                    email: parsedData.data?.username,
-                    // TODO: Hash the pw
-                    password: parsedData.data.password,
-                    name: parsedData.data.name
-                }
-                
-                
-            })
-      
-        
-        
-        
-      
-        res.json({
-            userId: user.id
-        })
-        
-        
-    } catch(e) {
-        
-        res.status(411).json({
-            message: "User already exists with this username"
-        })
-    }
-})
-
-app.post("/signin", async(req, res) => {
-
-    const parsedData=SigninSchema.safeParse(req.body);
-    if (!parsedData.success) {
-        res.json({
-            message: "Incorrect inputs"
-        })
-        return;
-    }
-     // TODO: Compare the hashed pws here
-     const user = await prismaClient.user.findFirst({
-        where: {
-            email: parsedData.data.username,
-            password: parsedData.data.password
-        }
+  const parsedData = CreateUserSchema.safeParse(req.body);
+  // console.log(parsedData)
+  if (!parsedData.success) {
+    console.log(parsedData.error);
+    res.json({
+      message: "Incorrect inputs"
     })
-    if (!user) {
-        res.status(403).json({
-            message: "Not authorized"
-        })
-        return;
-    }
+    return;
+  }
+  try {
+    console.log("In try")
+    console.log(parsedData.success);
 
-   
-    const token = jwt.sign({
-        userId: user?.id
-    }, JWT_SECRET);
+    const user = await prismaClient.user.create({
+      data: {
+        email: parsedData.data?.username,
+        // TODO: Hash the pw
+        password: parsedData.data.password,
+        name: parsedData.data.name
+      }
+
+
+    })
+
+
+
+
 
     res.json({
-        token
+      userId: user.id
     })
+
+
+  } catch (e) {
+
+    res.status(411).json({
+      message: "User already exists with this username"
+    })
+  }
+})
+
+app.post("/signin", async (req, res) => {
+
+  const parsedData = SigninSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    res.json({
+      message: "Incorrect inputs"
+    })
+    return;
+  }
+  // TODO: Compare the hashed pws here
+  const user = await prismaClient.user.findFirst({
+    where: {
+      email: parsedData.data.username,
+      password: parsedData.data.password
+    }
+  })
+  if (!user) {
+    res.status(403).json({
+      message: "Not authorized"
+    })
+    return;
+  }
+
+
+  const token = jwt.sign({ userId: user?.id }, JWT_SECRET);
+
+  res.json({
+    token
+  })
 })
 app.post("/room", middleware, async (req, res) => {
-    const parsedData = CreateRoomSchema.safeParse(req.body);
-    if (!parsedData.success) {
-        res.json({
-            message: "Incorrect inputs"
-        })
-        return;
-    }
-        // @ts-ignore: TODO: Fix this
-    const userId = req.userId;
+  const parsedData = CreateRoomSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    res.json({
+      message: "Incorrect inputs"
+    })
+    return;
+  }
 
-    try {
-        const room = await prismaClient.room.create({
-            data: {
-                slug: parsedData.data.name,
-                adminId: userId
-            }
-        })
+  const userId = req.userId;
 
-        res.json({
-            roomId: room.id
-        })
-    } catch(e) {
-        res.status(411).json({
-            message: "Room already exists with this name"
-        })
+  try {
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized: userId missing" });
+      return;
     }
+    const room = await prismaClient.room.create({
+      data: {
+        slug: parsedData.data.name,
+        adminId: userId
+      }
+    })
+
+    res.json({
+      roomId: room.id
+    })
+  } catch (e) {
+    res.status(411).json({
+      message: "Room already exists with this name"
+    })
+  }
 })
 
-app.get('/chats/:roomId',async(req,res)=>{
+app.get('/chats/:roomId', async (req, res) => {
 
-    try{
-    const roomId=Number(req.params.roomId);
-    const messages=await prismaClient.chat.findMany({
-        where:{
-            roomId:roomId
-        },
-        orderBy:{
-            id:"desc"
-        },
-        take:50
+  try {
+    const roomId = Number(req.params.roomId);
+    const messages = await prismaClient.chat.findMany({
+      where: {
+        roomId: roomId
+      },
+      orderBy: {
+        id: "desc"
+      },
+      take: 50
     })
     res.json({
-        messages
+      messages
     })
-}catch(e){
+  } catch (e) {
     console.log(e)
-}
+  }
 })
 app.get('/rooms', middleware, async (req, res) => {
-    // @ts-ignore
-    const userId = req.userId;
-  
-    try {
-      const rooms = await prismaClient.room.findMany({
-        where: {
-          adminId: userId
-        },
-        select: {
-          id: true,
-          slug: true
-        }
-      });
-  
-      res.json({ rooms });
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({ message: "Something went wrong" });
-    }
-  });
-  
 
-app.get("/room/:slug", async (req, res) => {
-    const slug = req.params.slug;
-    const room = await prismaClient.room.findFirst({
-        where: {
-            slug
-        }
+  const userId = req.userId;
+
+  try {
+    const rooms = await prismaClient.room.findMany({
+      where: {
+        adminId: userId
+      },
+      select: {
+        id: true,
+        slug: true
+      }
     });
 
-    res.json({
-        room
-    })
+    res.json({ rooms });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
+
+app.get("/room/:slug", async (req, res) => {
+  const slug = req.params.slug;
+  const room = await prismaClient.room.findFirst({
+    where: {
+      slug
+    }
+  });
+
+  res.json({
+    room
+  })
 })
 app.post("/generate-drawing", middleware, async (req, res) => {
-    
+
   try {
     const body = req.body;
     const zodResponse = drawingSchema.safeParse(body);
@@ -203,19 +204,23 @@ app.post("/generate-drawing", middleware, async (req, res) => {
     }
 
     let { type, content, roomId } = zodResponse.data;
-    // @ts-ignore: middleware adds userId to req
-    const userId = req.userId;
-    const roomIdNumber = Number(roomId);
-if (isNaN(roomIdNumber)) {
-   res.status(400).json({ msg: "Invalid roomId" });
-   return;
-}
 
-const checkRoom = await prismaClient.room.findUnique({
-  where: {
-    id: roomIdNumber
-  }
-});
+    const userId = req.userId;
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized: userId missing" });
+      return;
+    }
+    const roomIdNumber = Number(roomId);
+    if (isNaN(roomIdNumber)) {
+      res.status(400).json({ msg: "Invalid roomId" });
+      return;
+    }
+
+    const checkRoom = await prismaClient.room.findUnique({
+      where: {
+        id: roomIdNumber
+      }
+    });
 
     if (!checkRoom) {
       res.status(401).json({
@@ -232,11 +237,15 @@ const checkRoom = await prismaClient.room.findUnique({
     // }
 
     // const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
-     const geminiApiKey = process.env.GEMINI_API_KEY ;
-const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
 
 
     if (type === "OBJECT") {
+      if (!userId) {
+        res.status(401).json({ message: "Unauthorized: userId missing" });
+        return;
+      }
       const prompt = createObjectDrawingPrompt(content, roomId, userId);
       const response = await axios.post(geminiUrl, {
         contents: [
@@ -305,9 +314,9 @@ const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemin
         userId: shape.userId || userId
       }));
 
-      res.status(200).json({ 
+      res.status(200).json({
         result: processedShapes,
-        originalPrompt: content 
+        originalPrompt: content
       });
     } else if (type === "FLOWCHART") {
       const MAX_TOTAL_SHAPES = 30;
