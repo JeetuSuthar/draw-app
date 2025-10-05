@@ -1,0 +1,34 @@
+services:
+  # HTTP Backend Service
+  - type: web
+    name: collabdraw-backend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm run db:generate && pnpm run build:backend
+    startCommand: pnpm run start:backend
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+    autoDeploy: true
+
+  # WebSocket Backend Service
+  - type: web
+    name: collabdraw-websocket
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm run db:generate && pnpm run build:ws
+    startCommand: pnpm run start:websocket
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+    autoDeploy: true

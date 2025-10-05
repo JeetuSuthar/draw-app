@@ -1,17 +1,22 @@
 {
   "name": "draw-app",
   "private": true,
-  "workspaces": ["apps/web", "apps/ws-backend", "apps/http-backend"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
+    "build:backend": "pnpm --filter @repo/backend-common build && pnpm --filter @repo/common build && pnpm --filter @repo/db build && pnpm --filter http-backend build",
+    "build:ws": "pnpm --filter @repo/backend-common build && pnpm --filter @repo/db build && pnpm --filter ws-backend build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "db:generate": "cd packages/db && pnpm prisma generate && cd ../..",
     "start:web": "cd apps/excelidraw-frontend && pnpm run start",
-    "start:backend": "cd apps/http-backend && pnpm run dev",
-    "start:websocket": "cd apps/ws-backend && pnpm run dev"
+    "start:backend": "cd apps/http-backend && node dist/index.js",
+    "start:websocket": "cd apps/ws-backend && node dist/index.js"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

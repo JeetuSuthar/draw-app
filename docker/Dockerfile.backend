@@ -18,7 +18,13 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-RUN pnpm run db:generate   # now this will work correctly
+RUN pnpm run db:generate
+
+# Build all packages first (including workspace packages)
+RUN pnpm --filter '@repo/*' build
+
+# Build the http-backend app
+RUN pnpm --filter http-backend build
 
 EXPOSE 8080
 
