@@ -402,14 +402,14 @@ export function Canvas(props: params) {
 
         </div>
         {showAIModal && (
-    <AIModal
-        open={showAIModal}
-        onClose={() => setShowAIModal(false)}
-        game={game} // Your Game instance
-        roomId={props.roomId} // Assumes roomId is a prop
-        userId="user-id-placeholder" // Replace with actual userId
-    />
-)}
+            <AIModal
+                open={showAIModal}
+                onClose={() => setShowAIModal(false)}
+                game={game} // Your Game instance
+                roomId={props.roomId} // Assumes roomId is a prop
+                userId="user-id-placeholder" // Replace with actual userId
+            />
+        )}
         <canvas ref={canvasRef} width={width} height={height}></canvas>
     </div>
 

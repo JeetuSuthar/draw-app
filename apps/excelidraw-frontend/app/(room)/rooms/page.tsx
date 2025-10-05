@@ -85,17 +85,8 @@ export default function RoomManager() {
         headers: { Authorization: `${token}` },
       })
 
-      // Adding mock data for demonstration
-      const enhancedRooms = response.data.rooms.map((room: Room) => ({
-        ...room,
-        last: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-        participants: Math.floor(Math.random() * 10) + 1,
-        createdAt: new Date(Date.now() - Math.random() * 20000000000).toISOString(),
-        updatedAt: new Date(Date.now() - Math.random() * 5000000000).toISOString(),
-        isOwner: Math.random() > 0.3, // 70% chance of being the owner
-      }))
 
-      setRooms(enhancedRooms)
+      setRooms(response.data.rooms)
       toast.success("Rooms loaded successfully")
     } catch (error) {
       console.error("Error fetching rooms:", error)
@@ -109,7 +100,7 @@ export default function RoomManager() {
     if (!newRoomName.trim()) {
       toast.error("Please enter a room name")
       return
-    }
+    } 
 
     setIsLoading(true)
     try {

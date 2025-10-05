@@ -1,6 +1,8 @@
-import * as dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 dotenv.config({ path: '../../packages/db/.env' });
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 
-export const prismaClient = new PrismaClient();
+const prismaClient = new PrismaClient();
+
+exports.prismaClient = prismaClient;
